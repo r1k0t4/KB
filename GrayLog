@@ -1,4 +1,7 @@
-https://docs.graylog.org/en/3.1/pages/installation/os/centos.html
+https://docs.
+
+
+log.org/en/3.1/pages/installation/os/centos.html
 
 [root@centoslab01 yum.repos.d]# ps_mem -s
  Private  +   Shared  =  RAM used	Program

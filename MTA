@@ -30,3 +30,14 @@ for ID in $(mailq | awk '{print $1}' | grep -E "^([A-Z]|[0-9])"); do postsuper -
 
 #TELNET AUTH
 https://knowledge.broadcom.com/external/article/164907/test-smtp-authentication-with-messaging.html
+
+#MAIL
+telnet example.com 25
+ehlo example.com
+AUTH LOGIN					# <- NOT NECCESARY, SOLO PARA AUTENTICAR
+MAIL FROM:<username@example.com>
+RCPT TO:<friend@hotmail.com>, <friend2@yahoo.com>
+data
+${TEXTO.....}
+${MAS_TEXTO.....}
+.
