@@ -1,0 +1,28 @@
+#REGISTRO PAQUETES ZABBIX
+tcpdump -tt -nni any -w zabbix.pcap port 10050 &
+tcpdump -tt -nni any -w zabbix2.pcap port 10050  &
+
+#LECTURA PCAP [R]eset
+tcpdump -r zabbix.pcap | grep -P '\[.*R.*\]'
+tcpdump -nn -r zabbix.pcap | grep -C 5 -P '\[.*R.*\]'
+
+#NET / HOST
+tcpdump -nni any "net 10.255.141.0/25"
+tcpdump -nni any "host 10.255.141.40"
+tcpdump -nni any "host 10.255.241.84/32"
+
+#PORT / TEXT
+tcpdump -nni any "port 8080 or port 9090"
+
+#OPP
+tcpdump -nni any "host 10.255.241.84/32" # WAF SOURCE 1
+tcpdump -nni any "host 10.255.241.83/32" # WAF SOURCE 2
+
+#ICMP
+tcpdump -nni any icmp
+
+#ICMP - NON ECHO / REPLY
+tcpdump 'icmp[icmptype] != icmp-echo and icmp[icmptype] != icmp-echoreply'
+
+#Flags
+https://www.howtouselinux.com/post/tcpdump-capture-packets-with-tcp-flags

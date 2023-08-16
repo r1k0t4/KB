@@ -1,0 +1,1 @@
+date ; ./scp76 -3 prod.antel.ndc.amp.db01:/srv/backups/dumps/dump_all.sql.gz prod.antel.pando.amp.db01:/srv/backups;date

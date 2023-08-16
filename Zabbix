@@ -1,0 +1,22 @@
+#Increase log sverity
+zabbix_agentd --runtime-control log_level_increase
+
+#Grep remote command [KH 110305]
+tailf /var/log/zabbix/zabbix_agentd.log | grep -C5 system.run
+
+tailf /var/log/messages | grep 'comm="sh"'
+
+#Test parameters
+[root@opp-prod-db01 MASTER-DB01 .11 /etc/zabbix/zabbix_agentd.d ]#: cat userparameter_kh_mysql2.conf 
+UserParameter=mysql.khz2_mysql_instance_discover,/etc/zabbix/scripts/khz_mysql_instance_discover.sh
+UserParameter=mysql.khz2_mysql_database_discover,/etc/zabbix/scripts/khz_mysql_database_discover.sh
+UserParameter=mysql.khz2_replstatus[*],/etc/zabbix/scripts/khz_replstatus.sh $1
+UserParameter=mysql.khz2_lsappx[*],/etc/zabbix/scripts/khz_lsappx.sh $1 $2
+UserParameter=mysql.khz2_lsappl[*],/etc/zabbix/scripts/khz_lsappl.sh $1 $2
+UserParameter=mysql.khz2_ping[*],/etc/zabbix/scripts/khz_ping.sh $1
+UserParameter=mysql.khz2_version[*],/etc/zabbix/scripts/khz_version.sh $1
+UserParameter=mysql.khz2_khz_get_all_values[*],/etc/zabbix/scripts/khz_get_all_values.sh $1
+UserParameter=mysql.khz2.value[*],/etc/zabbix/scripts/khz_get_value.sh $1 $2
+UserParameter=mysql.khz2.db_size[*],/etc/zabbix/scripts/khz_get_db_size.sh $1 $2
+UserParameter=mysql.khz2.mysql_version,mysql -V
+[root@opp-prod-db01 MASTER-DB01 .11 /etc/zabbix/zabbix_agentd.d ]#: zabbix_agentd -t khz2_mysql_instance_discover

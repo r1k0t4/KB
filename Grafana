@@ -1,0 +1,53 @@
+# Test API-CURL
+
+>> AGESIC
+curl -x http://10.255.21.34:3128 -u readonly:readonly_pass -H "Hostname: $(hostname)" -H "Cliente: Agesic" -H "Query: prefijo_ssi" http://reportes.knowhow.com.uy/cgi-bin/api.cgi
+
+>> ANTEL
+curl -x http://proxy.stp.prod.vpc.sva.antel.com.uy:3128/ -u readonly:readonly_pass -H "Hostname: $(hostname)" -H "Cliente: Antel" -H "Query: solucion" http://reportes.knowhow.com.uy/cgi-bin/api.cgi
+
+>> Querys:
+---------------------------------------------
+                 Consultas
+---------------------------------------------
+
+  host                 : Nombre del host.
+  software             : Motor BD o aplicacion principal.
+  prefijo_ssi          : Prefijo notacion SSI KH.
+  ambiente             : Produccion, test, desarrollo, etc.
+  bases                : Nombre de la(s) base(s) de datos administradas.
+  proyecto_horas       : Nombre del proyecto para el registro de Horas HG.
+  coordinador          : Nombre del coordinador del proyecto/servicio en HG.
+  cliente              : Cliente de HG al que corresponde el host.
+  grupo_aplicaciones   : Grupo de aplicaciones al que corresponde el host.
+  solucion             : Solucion o proyecto.
+  respalda_a           : Herramienta de backups asociada.
+  instancia_bacula     : Si respalda a Bacula, servidor donde se respalda el host.
+  comentarios_respaldo : Notas o comentarios asociadas a los respaldos.
+  fecha_ingreso        : Fecha de ingreso a produccion.
+  contabiliza          : Estatus del servidor (produccion, baja, proximo a prod, etc.).
+  bd                   : Incluye administracion de DBA?
+  lx                   : Incluye administracion de Linux?
+  app                  : Incluye administracion de aplicaciones en el server?
+  bckp                 : Incluye administracion de Backups?
+  datacenter           : Datacenter donde esta ubicado el host.
+  clientenom_ssi       : Nombre del cliente para scripts KHCMR.
+  id_redmine           : Numero de ticket en Redmine HG con datos sobre el alta del host.
+  zabbix               : Instancia de Zabbix donde se monitorea.
+  check_mk             : Instancia de check_mk donde se monitorea.
+  khcmr                : Indica si el host se monitorea por KHCMR.
+  fecha_baja           : Fecha de baja del host.
+  comentarios          : Notas o comentarios generales.
+
+>> api-cgi
+	ssh prod.knowhow.grafana
+		cd /var/www/cgi-bin/
+			vim api.cgi
+
+>> CSV
+	/var/www/soluciones/sol_prod_hg
+		Agesic.csv  Antel.csv  Servicios Gerenciados.csv  Sucive.csv
+
+>> Sync
+	/root/fetch_planilla_soluciones.sh
+

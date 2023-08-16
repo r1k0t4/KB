@@ -1,0 +1,150 @@
+ip_sets:
+  - name: "IP_NOC_HG"
+    description: "Lista de ips para accesos desde HG"
+    address:
+      - "10.68.174.16/32"
+  - name: "IP_ZABBIX_SVC"
+    description: "Dirección IP del servicio ZABBIX"
+    address:
+      - "172.16.2.42/32"
+  - name: "IP_PROXY_SVC"
+    description: "Dirección IP del servicio PROXY"
+    address:
+      - "10.68.172.16/32"
+  - name: "IP_NTP_SVC"
+    description: "Dirección IP del servicio NTP"
+    address:
+      - "10.68.174.13/32"
+      - "10.68.174.14/32"
+  - name: "IP_DNS_SVC"
+    description: "Dirección IP del servicio DNS"
+    address:
+      - "10.68.174.13/32"
+      - "10.68.174.14/32"
+  - name: "IP_MTA_SVC"
+    description: "Dirección IP del servicio MTA"
+    address:
+      - "10.68.174.11/32"
+      - "10.68.174.12/32"
+  - name: "IP_BKP_SVC"
+    description: "Dirección IP del servicio BKP"
+    address:
+      - "172.16.2.19/32"
+      - "172.16.2.22/32"
+      - "172.16.2.100/32"
+      - "172.16.2.59/32"
+
+firewall_rules:
+  - name: "IN-NOC-HG"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "ip_sets"
+      values:
+        - "IP_NOC_HG"
+    destination:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    service:
+      - "tcp/22"
+  - name: "IN-ZABBIX-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "ip_sets"
+      values:
+        - "IP_ZABBIX_SVC"
+    destination:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    service:
+      - "tcp/10050"
+  - name: "OUT-ZABBIX-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_ZABBIX_SVC"
+    service:
+      - "tcp/10051"
+  - name: "IN-BKP-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "ip_sets"
+      values:
+        - "IP_BKP_SVC"
+    destination:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    service:
+      - "tcp/9101"
+      - "tcp/9102"
+  - name: "OUT-BKP-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_BKP_SVC"
+    service:
+      - "tcp/9103"
+  - name: "OUT-PROXY-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_PROXY_SVC"
+    service:
+      - "tcp/3128"
+  - name: "OUT-DNS-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-M01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_DNS_SVC"
+    service:
+      - "udp/53"
+  - name: "OUT-NTP-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-S01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_NTP_SVC"
+    service:
+      - "udp/123" 
+  - name: "OUT-MTA-SVC"
+    edge_gateway: "01-SHG-I-PRUEBAS-S01"
+    source:
+      type: "gateway_interfaces"
+      values:
+        - "internal"
+    destination:
+      type: "ip_sets"
+      values:
+        - "IP_MTA_SVC"
+    service:
+      - "tcp/25"
+      - "tcp/110"
+      - "tcp/465"
+      - "tcp/587"
+      - "tcp/995"

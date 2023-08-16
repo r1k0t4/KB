@@ -1,0 +1,76 @@
+					# https://goaccess.io/download
+
+					$ wget https://tar.goaccess.io/goaccess-1.6.2.tar.gz
+					$ tar -xzvf goaccess-1.6.2.tar.gz
+					$ cd goaccess-1.6.2/
+					$ ./configure --enable-utf8 --enable-geoip=mmdb
+					$ make
+					# make install
+
+#Lectura on the fly
+ssh -t opp-prod-waf01 "tail -f /var/log/httpd/test.sifi.red.uy-access_log" | goaccess --real-time-html -o test.html
+ssh -t opp-prod-waf01 'tail -f /var/log/httpd/test.sifi.red.uy-access_log' | goaccess -o test.html --real-time-html -
+
+#CONF DIR
+~/.goaccessrc
+time-format %H:%M:%S
+date-format %d/%b/%Y
+log-format %h %^[%d:%t %^] "%r" %s %b "%R" "%u"
+
+#Exportar a html
+cat sifi.red.uy-access_log | goaccess -o /tmp/reporteprueba.html
+
+#Datos en consola
+cat sifi.red.uy-access_log | goaccess 
+
+#Iniciar web local - puntual
+python -m SimpleHTTPServer [port]
+
+#LogFormat	The log-format variable followed by a space or \t , specifies the log format string.
+
+       %x     A  date  and  time field matching the time-format and date-format variables. This is used when given a timestamp or the date & time are con‐
+              catenated as a single string (e.g., 1501647332 or 20170801235000) instead of the date and time being in two separated variables.
+
+       %t     time field matching the time-format variable.
+
+(*)    %d     date field matching the date-format variable.
+
+       %v     The canonical Server Name of the server serving the request (Virtual Host).
+
+       %e     This is the userid of the person requesting the document as determined by HTTP authentication.
+
+(*)    %h     host (the client IP address, either IPv4 or IPv6)
+
+(*)    %r     The request line from the client. This requires specific delimiters around the request (as single quotes, double quotes, or  anything  else)
+              to be parsable. If not, we have to use a combination of special format specifiers as %m %U %H.
+
+       %q     The query string.
+
+       %m     The request method.
+
+       %U     The URL path requested.
+
+              Note: If the query string is in %U, there is no need to use %q.  However, if the URL path, does not include any query string, you may use %q
+              and the query string will be appended to the request.
+
+       %H     The request protocol.
+
+       %s     The status code that the server sends back to the client.
+
+       %b     The size of the object returned to the client.
+
+       %R     The "Referrer" HTTP request header.
+
+       %u     The user-agent HTTP request header.
+
+       %D     The time taken to serve the request, in microseconds as a decimal number.
+
+       %T     The time taken to serve the request, in seconds with milliseconds resolution.
+
+       %L     The time taken to serve the request, in milliseconds as a decimal number.
+
+       %^     Ignore this field.
+
+       %~     Move forward through the log string until a non-space (!isspace) char is found.
+
+       ~h     The host (the client IP address, either IPv4 or IPv6) in a X-Forwarded-For (XFF) field.

@@ -1,0 +1,48 @@
+#BASIC DIR
+/opt/ansible/roles/$ROLE
+
+#BASIC ANATOMY:
+defaults	< main.yml		#STANDARD - WIDE - CONFIGS / VARS
+	smtp_port = 25
+	httpd_log_level = error
+files		< NEEDED_FILES		#ASCCI, STANDARD FILES USED FOR ROLE PURPOUSE
+
+meta		< main.yml		#ROLE INFORMATION
+  author: 
+  description:
+  company: "Know-How, Uy"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.7
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+tasks		< main.yml		#COMPLETE ROLES TO PERFORM ON PLAYBOOK
+
+templates	< files.j2		#TEMPLATES JINJA2 FORMAT
+
+tests		< test.yml		#TEST TASKS, CAN BE ON "tasks" DIRECTORY
+
+handlers	< main.yml		#HANDLERS
+	service_restart
+	
+
+vars		< default_vars.yml	#WIDE VARIABLES SUCH AS USERS, KEYS, ETC
+	user:				#LIST
+	- bob
+	- john
+	- cindy
+
+	user:				#DICTIONARY
+	  name: bob
+	  job: engineer
+	  salary: 10000
+

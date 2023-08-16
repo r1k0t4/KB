@@ -1,0 +1,4 @@
+#DISABLE LOG FOR REMOTE IP
+
+[root@wopp01-prod ~]# cat /etc/httpd/modsecurity.d/local_rules/pre-deloitte.conf 
+SecRule REMOTE_ADDR "@ipMatch 190.64.72.2" "id:51000,phase:1,noauditlog,nolog,allow,ctl:ruleEngine=off"

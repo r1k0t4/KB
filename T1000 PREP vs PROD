@@ -1,0 +1,441 @@
+clorenzo(su)=>/home/clorenzo #: which-config t100 | grep -C3 prep
+#  IdentityFile ~/.ssh/keys/id_rsa_kh
+#  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geo-noc-te
+
+Location: https://gestion.nube.red.uy/cloud/org/0109agesic-t100-preprod
+File: /root/.ssh/data/0701-agesic-torre-t100-preprod.config
+Result: ## https://gestion.nube.red.uy/cloud/org/0109agesic-t100-preprod
+Host prep.agesic.torre.t100.mint.simple.db02 preprod-t100-m-001
+  HostName 10.240.64.48
+  User root
+  IdentityFile ~/.ssh/keys/id_rsa_kh
+clorenzo(su)=>/home/clorenzo #: which-config t100.mint.simple.db02
+Query: t100.mint.simple.db02
+
+Location: https://gestion.nube.red.uy/cloud/org/0109agesic-t100/
+File: /root/.ssh/data/0701-agesic-torre-t100.config
+Result: Host prod.agesic.torre.t100.mint.simple.db02 prod-t100-mint-simple-bd02
+  HostName 10.240.64.118
+  User root
+  IdentityFile ~/.ssh/keys/id_rsa_kh
+  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geo-noc-te
+
+Location: https://gestion.nube.red.uy/cloud/org/0109agesic-t100-preprod
+File: /root/.ssh/data/0701-agesic-torre-t100-preprod.config
+Result: Host prep.agesic.torre.t100.mint.simple.db02 preprod-t100-m-001
+  HostName 10.240.64.48
+  User root
+  IdentityFile ~/.ssh/keys/id_rsa_kh
+  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geo-noc-te
+clorenzo(su)=>/home/clorenzo #: ssh prep.agesic.torre.t100.mint.simple.db02
+ip aip aroot@preprod-t100-m-001:~# ip a| grep global
+    inet 192.168.51.3/24 brd 192.168.51.255 scope global eno16777984
+    inet 192.168.100.3/24 brd 192.168.100.255 scope global eno33557248
+root@preprod-t100-m-001:~# 
+
+NAT EN VSHIELD -->> 192.168.51.3 <> 10.255.51.3
+
+clorenzo(su)=>/home/clorenzo #: search_and_go prod.agesic.torre.t100.mint.simple.db02
+ssh_exchange_identification: Connection closed by remote host
+Saliendo de prod.agesic.torre.t100.mint.simple.db02 ...
+clorenzo(su)=>/home/clorenzo #: 
+
+# MIGRADO A GEO
+# MODIFICAMOS CONFIG:
+
+clorenzo(su)=>/home/clorenzo #: which-config t100.mint.simple.bd01
+Query: t100.mint.simple.bd01
+
+Location: https://vclouddirector07.cloud.agesic.local/cloud/org/0109agesic-t100-pa/
+File: /root/.ssh/data/0602-agesic-pando-t100.config
+Result: #  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh prod-t100-mint-simple-bd01
+  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geopa
+#Host prod.agesic.pando.sae.mint.db03 prod-t100-mint-sae-bd03.gestion.red.uy
+#  HostName 10.242.64.65
+#  HostName db03.sae.mint.agesic.prod
+
+Location: https://gestion.nube.red.uy/cloud/org/0109agesic-t100/
+File: /root/.ssh/data/0701-agesic-torre-t100.config
+Result: #Host prod.agesic.torre.t100.mint.simple.db01 prod-t100-mint-simple-bd01
+#  HostName 10.240.64.117
+#  User root
+#  IdentityFile ~/.ssh/keys/id_rsa_kh
+#  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geo-noc-te
+
+Location: https://geo-te.nube.red.uy/tenant/agesic-simple-prod
+File: /root/.ssh/data/0804-agesic-geote-simple.config
+Result: Host prod.agesic.geote.t100.mint.mysql.db01 prod-geo-te-t100-simple-mint-db01 prod-t100-mint-simple-bd01-te prod-t100-mint-simple-bd01-te.gestion.hg
+  Hostname 10.233.10.145
+  User root
+  IdentityFile ~/.ssh/keys/id_rsa_kh
+  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/keys/id_rsa_kh geo-noc-te
+
+Location: https://geo-pa.nube.red.uy/tenant/agesic-simple-prod
+File: /root/.ssh/data/0904-agesic-geopa-simple.config
+Result: Host prod.agesic.geopa.t100.mint.mysql.db01 prod-geo-pa-t100-simple-minterior-db01 prod-t100-mint-simple-bd01-pa prod-t100-mint-simple-bd01-pa.gestion.hg
+  Hostname 10.233.110.145
+  User root
+  IdentityFile ~/.ssh/keys/id_rsa_kh
+  ProxyCommand ssh -q -W %h:%p -l kh -i ~/.ssh/keys/id_rsa_kh geo-noc-pa
+
+clorenzo(su)=>/home/clorenzo #: ssh prod.agesic.geote.t100.mint.mysql.db01
+root@prod-t100-mint-simple-bd01-te:~# ip a | grep global
+    inet 10.233.10.145/24 brd 10.233.10.255 scope global eno16777984
+root@prod-t100-mint-simple-bd01-te:~# logout
+Connection to 10.233.10.145 closed.
+
+clorenzo(su)=>/home/clorenzo #: ssh prod.agesic.geopa.t100.mint.mysql.db01
+ip aip aroot@prod-t100-mint-simple-bd01-pa:~# ip a | grep global
+    inet 10.233.110.145/24 brd 10.233.110.255 scope global eno16777984
+root@prod-t100-mint-simple-bd01-pa:~# 
+
+# COMENTAN QUE ES EN TE #
+
+NAT EN VSHIELD -->> 10.233.10.141-10.233.10.165 <> 10.255.18.40
+
+## TELNETS ##
+
+[cl@cl ~]$ ssh prod.agesic.geote.t100.mint.mysql.db01
+root@prod-t100-mint-simple-bd01-te:~# telnet 10.255.51.3 22
+Trying 10.255.51.3...
+^C
+root@prod-t100-mint-simple-bd01-te:~# ip r get 10.255.51.3 22
+22.0.0.0 via 10.233.10.1 dev eno16777984  src 10.233.10.145 
+    cache 
+root@prod-t100-mint-simple-bd01-te:~# 
+
+
+[cl@cl KB]$ ssh prep.agesic.torre.t100.mint.simple.db02
+root@preprod-t100-m-001:~# telnet 10.255.18.40 22
+Trying 10.255.18.40...
+^C
+root@preprod-t100-m-001:~# ip r get  10.255.18.40 
+10.255.18.40 via 192.168.51.1 dev eno16777984  src 192.168.51.3 
+    cache 
+root@preprod-t100-m-001:~#
+
+# CONFIGURAMS FW DE PREP PARA PERMITIR ENTRADA DE PROD #
+
+# INSTALAMOS TCPDUMP EN PREP #
+
+root@prod-t100-mint-simple-bd01-te:~# yum install tcpdump -y
+Loaded plugins: fastestmirror, product-id, search-disabled-repos
+Repodata is over 2 weeks old. Install yum-cron? Or run: yum makecache fast
+base                                                                                                                                   | 3.6 kB  00:00:00     
+extras                                                                                                                                 | 2.9 kB  00:00:00     
+mysql-connectors-community                                                                                                             | 2.6 kB  00:00:00     
+mysql-tools-community                                                                                                                  | 2.6 kB  00:00:00     
+mysql56-community                                                                                                                      | 2.6 kB  00:00:00     
+updates                                                                                                                                | 2.9 kB  00:00:00     
+(1/5): mysql-tools-community/x86_64/primary_db                                                                                         |  63 kB  00:00:00     
+(2/5): mysql-connectors-community/x86_64/primary_db                                                                                    |  58 kB  00:00:00     
+(3/5): mysql56-community/x86_64/primary_db                                                                                             | 329 kB  00:00:00     
+(4/5): extras/x86_64/primary_db                                                                                                        | 206 kB  00:00:00     
+(5/5): updates/x86_64/primary_db                                                                                                       | 4.5 MB  00:00:01     
+Determining fastest mirrors
+ * base: espejito.fder.edu.uy
+ * extras: espejito.fder.edu.uy
+ * updates: espejito.fder.edu.uy
+Resolving Dependencies
+--> Running transaction check
+---> Package tcpdump.x86_64 14:4.9.2-4.el7_7.1 will be installed
+--> Processing Dependency: libpcap >= 14:1.5.3-10 for package: 14:tcpdump-4.9.2-4.el7_7.1.x86_64
+--> Running transaction check
+---> Package libpcap.x86_64 14:1.5.3-8.el7 will be updated
+---> Package libpcap.x86_64 14:1.5.3-12.el7 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================
+ Package                             Arch                               Version                                        Repository                        Size
+==============================================================================================================================================================
+Installing:
+ tcpdump                             x86_64                             14:4.9.2-4.el7_7.1                             base                             422 k
+Updating for dependencies:
+ libpcap                             x86_64                             14:1.5.3-12.el7                                base                             139 k
+
+Transaction Summary
+==============================================================================================================================================================
+Install  1 Package
+Upgrade             ( 1 Dependent package)
+
+Total download size: 560 k
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+(1/2): libpcap-1.5.3-12.el7.x86_64.rpm                                                                                                 | 139 kB  00:00:00     
+(2/2): tcpdump-4.9.2-4.el7_7.1.x86_64.rpm                                                                                              | 422 kB  00:00:00     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                         3.0 MB/s | 560 kB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : 14:libpcap-1.5.3-12.el7.x86_64                                                                                                             1/3 
+  Installing : 14:tcpdump-4.9.2-4.el7_7.1.x86_64                                                                                                          2/3 
+  Cleanup    : 14:libpcap-1.5.3-8.el7.x86_64                                                                                                              3/3 
+  Verifying  : 14:libpcap-1.5.3-12.el7.x86_64                                                                                                             1/3 
+  Verifying  : 14:tcpdump-4.9.2-4.el7_7.1.x86_64                                                                                                          2/3 
+  Verifying  : 14:libpcap-1.5.3-8.el7.x86_64                                                                                                              3/3 
+
+Installed:
+  tcpdump.x86_64 14:4.9.2-4.el7_7.1                                                                                                                           
+
+Dependency Updated:
+  libpcap.x86_64 14:1.5.3-12.el7                                                                                                                              
+
+Complete!
+root@prod-t100-mint-simple-bd01-te:~# 
+
+# INSTALAMOS TCPDUMP EN PREP #
+
+root@preprod-t100-m-001:~# install tcpdump -y
+Loaded plugins: fastestmirror, product-id, search-disabled-repos
+
+
+ One of the configured repositories failed (Unknown),
+ and yum doesn't have enough cached data to continue. At this point the only
+ safe thing yum can do is fail. There are a few ways to work "fix" this:
+
+     1. Contact the upstream for the repository and get them to fix the problem.
+
+     2. Reconfigure the baseurl/etc. for the repository, to point to a working
+        upstream. This is most often useful if you are using a newer
+        distribution release than is supported by the repository (and the
+        packages for the previous distribution release still work).
+
+     3. Disable the repository, so yum won't use it by default. Yum will then
+        just ignore the repository until you permanently enable it again or use
+        --enablerepo for temporary usage:
+
+            yum-config-manager --disable <repoid>
+
+     4. Configure the failing repository to be skipped, if it is unavailable.
+        Note that yum will try to contact the repo. when it runs most commands,
+        so will have to try and fail each time (and thus. yum will be be much
+        slower). If it is a very temporary problem though, this is often a nice
+        compromise:
+
+            yum-config-manager --save --setopt=<repoid>.skip_if_unavailable=true
+
+Cannot find a valid baseurl for repo: addons/7/x86_64
+root@preprod-t100-m-001:~# yum repolist all
+Loaded plugins: fastestmirror, product-id, search-disabled-repos
+base/7/x86_64                                                                                                                          | 3.6 kB  00:00:00     
+extras/7/x86_64                                                                                                                        | 2.9 kB  00:00:00     
+mysql-connectors-community/x86_64                                                                                                      | 2.6 kB  00:00:00     
+mysql-tools-community/x86_64                                                                                                           | 2.6 kB  00:00:00     
+mysql56-community/x86_64                                                                                                               | 2.6 kB  00:00:00     
+update/7/x86_64                                                                                                                        | 2.9 kB  00:00:00     
+repo id                                                repo name                                                                               status
+addons/7/x86_64                                        CentOS-7 - Addons                                                                       enabled:      0
+base/7/x86_64                                          CentOS-7 - Base                                                                         enabled: 10,070
+centosplus/7/x86_64                                    CentOS-7 - Plus                                                                         disabled
+contrib/7/x86_64                                       CentOS-7 - Contrib                                                                      disabled
+extras/7/x86_64                                        CentOS-7 - Extras                                                                       enabled:    413
+mysql-connectors-community/x86_64                      MySQL Connectors Community                                                              enabled:    145
+mysql-connectors-community-source                      MySQL Connectors Community - Source                                                     disabled
+mysql-tools-community/x86_64                           MySQL Tools Community                                                                   enabled:     96
+mysql-tools-community-source                           MySQL Tools Community - Source                                                          disabled
+mysql55-community/x86_64                               MySQL 5.5 Community Server                                                              disabled
+mysql55-community-source                               MySQL 5.5 Community Server - Source                                                     disabled
+mysql56-community/x86_64                               MySQL 5.6 Community Server                                                              enabled:    625
+mysql56-community-source                               MySQL 5.6 Community Server - Source                                                     disabled
+mysql57-community-dmr/x86_64                           MySQL 5.7 Community Server Development Milestone Release                                disabled
+mysql57-community-dmr-source                           MySQL 5.7 Community Server Development Milestone Release - Source                       disabled
+update/7/x86_64                                        CentOS-7 - Updates                                                                      enabled:  1,134
+repolist: 12,483
+root@preprod-t100-m-001:~# yum-config-manager --disable addons
+Loaded plugins: fastestmirror, product-id
+======================================================================== repo: addons ========================================================================
+[addons]
+async = True
+bandwidth = 0
+base_persistdir = /var/lib/yum/repos/x86_64/7
+baseurl = 
+cache = 0
+cachedir = /var/cache/yum/x86_64/7/addons
+check_config_file_age = True
+cost = 1000
+deltarpm_metadata_percentage = 100
+deltarpm_percentage = 
+enabled = 0
+enablegroups = True
+exclude = 
+failovermethod = priority
+gpgcadir = /var/lib/yum/repos/x86_64/7/addons/gpgcadir
+gpgcakey = 
+gpgcheck = True
+gpgdir = /var/lib/yum/repos/x86_64/7/addons/gpgdir
+gpgkey = http://mirror.centos.org/centos/RPM-GPG-KEY-centos4
+hdrdir = /var/cache/yum/x86_64/7/addons/headers
+http_caching = all
+includepkgs = 
+ip_resolve = 
+keepalive = True
+keepcache = False
+mddownloadpolicy = sqlite
+mdpolicy = group:small
+mediaid = 
+metadata_expire = 21600
+metadata_expire_filter = read-only:present
+metalink = 
+minrate = 0
+mirrorlist = http://mirrorlist.centos.org/?release=7&arch=x86_64&repo=addons
+mirrorlist_expire = 86400
+name = CentOS-7 - Addons
+old_base_cache_dir = 
+password = 
+persistdir = /var/lib/yum/repos/x86_64/7/addons
+pkgdir = /var/cache/yum/x86_64/7/addons/packages
+proxy = http://10.255.21.34:3128
+proxy_dict = {'ftp': 'http://10.255.21.34:3128', 'http': 'http://10.255.21.34:3128', 'https': 'http://10.255.21.34:3128'}
+proxy_password = 
+proxy_username = 
+repo_gpgcheck = False
+retries = 10
+skip_if_unavailable = False
+ssl_check_cert_permissions = True
+sslcacert = 
+sslclientcert = 
+sslclientkey = 
+sslverify = True
+throttle = 0
+timeout = 30.0
+ui_id = addons/7/x86_64
+ui_repoid_vars = releasever,
+   basearch
+username = 
+
+root@preprod-t100-m-001:~# yum repolist all
+Loaded plugins: fastestmirror, product-id, search-disabled-repos
+Determining fastest mirrors
+ * base: centos.brisanet.com.br
+ * extras: centos.itsbrasil.net
+ * update: centos.ufes.br
+repo id                                                repo name                                                                               status
+addons/7/x86_64                                        CentOS-7 - Addons                                                                       disabled
+base/7/x86_64                                          CentOS-7 - Base                                                                         enabled: 10,070
+centosplus/7/x86_64                                    CentOS-7 - Plus                                                                         disabled
+contrib/7/x86_64                                       CentOS-7 - Contrib                                                                      disabled
+extras/7/x86_64                                        CentOS-7 - Extras                                                                       enabled:    413
+mysql-connectors-community/x86_64                      MySQL Connectors Community                                                              enabled:    145
+mysql-connectors-community-source                      MySQL Connectors Community - Source                                                     disabled
+mysql-tools-community/x86_64                           MySQL Tools Community                                                                   enabled:     96
+mysql-tools-community-source                           MySQL Tools Community - Source                                                          disabled
+mysql55-community/x86_64                               MySQL 5.5 Community Server                                                              disabled
+mysql55-community-source                               MySQL 5.5 Community Server - Source                                                     disabled
+mysql56-community/x86_64                               MySQL 5.6 Community Server                                                              enabled:    625
+mysql56-community-source                               MySQL 5.6 Community Server - Source                                                     disabled
+mysql57-community-dmr/x86_64                           MySQL 5.7 Community Server Development Milestone Release                                disabled
+mysql57-community-dmr-source                           MySQL 5.7 Community Server Development Milestone Release - Source                       disabled
+update/7/x86_64                                        CentOS-7 - Updates                                                                      enabled:  1,134
+repolist: 12,483
+root@preprod-t100-m-001:~# yum install tcpdump -y
+Loaded plugins: fastestmirror, product-id, search-disabled-repos
+base                                                                                                                                   | 3.6 kB  00:00:00     
+extras                                                                                                                                 | 2.9 kB  00:00:00     
+update                                                                                                                                 | 2.9 kB  00:00:00     
+Loading mirror speeds from cached hostfile
+ * base: centos.brisanet.com.br
+ * extras: centos.itsbrasil.net
+ * update: centos.ufes.br
+Resolving Dependencies
+--> Running transaction check
+---> Package tcpdump.x86_64 14:4.9.2-4.el7_7.1 will be installed
+--> Processing Dependency: libpcap >= 14:1.5.3-10 for package: 14:tcpdump-4.9.2-4.el7_7.1.x86_64
+--> Processing Dependency: libcrypto.so.10(OPENSSL_1.0.2)(64bit) for package: 14:tcpdump-4.9.2-4.el7_7.1.x86_64
+--> Running transaction check
+---> Package libpcap.x86_64 14:1.5.3-8.el7 will be updated
+---> Package libpcap.x86_64 14:1.5.3-12.el7 will be an update
+---> Package openssl-libs.x86_64 1:1.0.1e-51.el7_2.4 will be updated
+--> Processing Dependency: openssl-libs(x86-64) = 1:1.0.1e-51.el7_2.4 for package: 1:openssl-1.0.1e-51.el7_2.4.x86_64
+--> Processing Dependency: openssl-libs(x86-64) = 1:1.0.1e-51.el7_2.4 for package: 1:openssl-devel-1.0.1e-51.el7_2.4.x86_64
+---> Package openssl-libs.x86_64 1:1.0.2k-19.el7 will be an update
+--> Running transaction check
+---> Package openssl.x86_64 1:1.0.1e-51.el7_2.4 will be updated
+---> Package openssl.x86_64 1:1.0.2k-19.el7 will be an update
+---> Package openssl-devel.x86_64 1:1.0.1e-51.el7_2.4 will be updated
+---> Package openssl-devel.x86_64 1:1.0.2k-19.el7 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================
+ Package                                 Arch                             Version                                        Repository                      Size
+==============================================================================================================================================================
+Installing:
+ tcpdump                                 x86_64                           14:4.9.2-4.el7_7.1                             base                           422 k
+Updating for dependencies:
+ libpcap                                 x86_64                           14:1.5.3-12.el7                                base                           139 k
+ openssl                                 x86_64                           1:1.0.2k-19.el7                                base                           493 k
+ openssl-devel                           x86_64                           1:1.0.2k-19.el7                                base                           1.5 M
+ openssl-libs                            x86_64                           1:1.0.2k-19.el7                                base                           1.2 M
+
+Transaction Summary
+==============================================================================================================================================================
+Install  1 Package
+Upgrade             ( 4 Dependent packages)
+
+Total download size: 3.7 M
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+(1/5): libpcap-1.5.3-12.el7.x86_64.rpm                                                                                                 | 139 kB  00:00:00     
+(2/5): openssl-devel-1.0.2k-19.el7.x86_64.rpm                                                                                          | 1.5 MB  00:00:00     
+(3/5): openssl-1.0.2k-19.el7.x86_64.rpm                                                                                                | 493 kB  00:00:00     
+(4/5): tcpdump-4.9.2-4.el7_7.1.x86_64.rpm                                                                                              | 422 kB  00:00:00     
+(5/5): openssl-libs-1.0.2k-19.el7.x86_64.rpm                                                                                           | 1.2 MB  00:00:00     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                         5.1 MB/s | 3.7 MB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Updating   : 1:openssl-libs-1.0.2k-19.el7.x86_64                                                                                                        1/9 
+  Updating   : 14:libpcap-1.5.3-12.el7.x86_64                                                                                                             2/9 
+  Installing : 14:tcpdump-4.9.2-4.el7_7.1.x86_64                                                                                                          3/9 
+  Updating   : 1:openssl-1.0.2k-19.el7.x86_64                                                                                                             4/9 
+  Updating   : 1:openssl-devel-1.0.2k-19.el7.x86_64                                                                                                       5/9 
+  Cleanup    : 1:openssl-devel-1.0.1e-51.el7_2.4.x86_64                                                                                                   6/9 
+  Cleanup    : 1:openssl-1.0.1e-51.el7_2.4.x86_64                                                                                                         7/9 
+  Cleanup    : 1:openssl-libs-1.0.1e-51.el7_2.4.x86_64                                                                                                    8/9 
+  Cleanup    : 14:libpcap-1.5.3-8.el7.x86_64                                                                                                              9/9 
+  Verifying  : 1:openssl-1.0.2k-19.el7.x86_64                                                                                                             1/9 
+  Verifying  : 14:tcpdump-4.9.2-4.el7_7.1.x86_64                                                                                                          2/9 
+  Verifying  : 1:openssl-devel-1.0.2k-19.el7.x86_64                                                                                                       3/9 
+  Verifying  : 14:libpcap-1.5.3-12.el7.x86_64                                                                                                             4/9 
+  Verifying  : 1:openssl-libs-1.0.2k-19.el7.x86_64                                                                                                        5/9 
+  Verifying  : 14:libpcap-1.5.3-8.el7.x86_64                                                                                                              6/9 
+  Verifying  : 1:openssl-devel-1.0.1e-51.el7_2.4.x86_64                                                                                                   7/9 
+  Verifying  : 1:openssl-1.0.1e-51.el7_2.4.x86_64                                                                                                         8/9 
+  Verifying  : 1:openssl-libs-1.0.1e-51.el7_2.4.x86_64                                                                                                    9/9 
+
+Installed:
+  tcpdump.x86_64 14:4.9.2-4.el7_7.1                                                                                                                           
+
+Dependency Updated:
+  libpcap.x86_64 14:1.5.3-12.el7      openssl.x86_64 1:1.0.2k-19.el7      openssl-devel.x86_64 1:1.0.2k-19.el7      openssl-libs.x86_64 1:1.0.2k-19.el7     
+
+Complete!
+root@preprod-t100-m-001:~# 
+
+# PROBAMOS UN TELNET DE PROD A PREP #
+
+root@prod-t100-mint-simple-bd01-te:~# telnet 10.255.51.3 22
+Trying 10.255.51.3...
+^C
+root@prod-t100-mint-simple-bd01-te:~# 
+
+# NO VEMOS TRAFICO #
+
+root@preprod-t100-m-001:~# tcpdump -nni any net 10.255.18.0/24
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
+^C
+0 packets captured
+7 packets received by filter
+0 packets dropped by kernel
+root@preprod-t100-m-001:~# 
+
+NAT EN VSHIELD -->> 192.168.100.3 <> 10.240.64.48

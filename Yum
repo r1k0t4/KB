@@ -1,0 +1,3 @@
+# Pretty list
+
+yum list ${PAQUETE} -q | tr -s ' ' | column -t

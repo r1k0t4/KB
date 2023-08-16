@@ -1,0 +1,17 @@
+#TOP
+
+COLOR   + HIGHLIGHT ORDER ITEM  + COMMAND       + BOLD
+z       + x                     + c             + b
+
+1 = CPU CORES
+p = CPU ORDER
+t = CPU %
+
+Shift + m = RAM ORDER
+m = RAM %
+
+Shift + w = SAVE
+
+f = sort area
+swap + s
+

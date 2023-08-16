@@ -1,0 +1,133 @@
+# Procesos "Ininterrumpibles"
+# http://www.knowhow.com.uy/?p=8617
+ps -eo ppid,pid,user,stat,pcpu,comm,wchan:32 -T | grep mysql | grep Dl|wc -l
+
+
+#LISTA DE PROCESOS
+root@opp-capa-db02 [(none)] > show processlist;
++-------+-------------+-----------+------+--------------+---------+-----------------------------------------------------------------------------+------------------+----------+
+| Id    | User        | Host      | db   | Command      | Time    | State                                                                       | Info             | Progress |
++-------+-------------+-----------+------+--------------+---------+-----------------------------------------------------------------------------+------------------+----------+
+|     3 | system user |           | NULL | Daemon       |    NULL | InnoDB purge worker                                                         | NULL             |    0.000 |
+|     1 | system user |           | NULL | Daemon       |    NULL | InnoDB purge worker                                                         | NULL             |    0.000 |
+|     2 | system user |           | NULL | Daemon       |    NULL | InnoDB purge worker                                                         | NULL             |    0.000 |
+|     4 | system user |           | NULL | Daemon       |    NULL | InnoDB purge coordinator                                                    | NULL             |    0.000 |
+|     5 | system user |           | NULL | Daemon       |    NULL | InnoDB shutdown handler                                                     | NULL             |    0.000 |
+|    10 | system user |           | NULL | Slave_IO     | 7064759 | Waiting for master to send event                                            | NULL             |    0.000 |
+|    12 | system user |           | NULL | Slave_worker |   18423 | Waiting for work from SQL thread                                            | NULL             |    0.000 |
+|    13 | system user |           | NULL | Slave_worker |   18423 | Waiting for work from SQL thread                                            | NULL             |    0.000 |
+|    11 | system user |           | NULL | Slave_SQL    |   60925 | Slave has read all relay log; waiting for the slave I/O thread to update it | NULL             |    0.000 |
+| 23506 | root        | localhost | NULL | Query        |       0 | init                                                                        | show processlist |    0.000 |
++-------+-------------+-----------+------+--------------+---------+-----------------------------------------------------------------------------+------------------+----------+
+10 rows in set (0.00 sec)
+
+#SLAVE INFO
+root@opp-capa-db02 [(none)] > show slave status\G
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: 192.168.22.31
+                  Master_User: replicator
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: galera01-bin.000865
+          Read_Master_Log_Pos: 100976988
+               Relay_Log_File: rpl-relay.000157
+                Relay_Log_Pos: 100977290
+        Relay_Master_Log_File: galera01-bin.000865
+             Slave_IO_Running: Yes		<--- Metadata de cambios enviado por Master ( DEBE IR ON )
+            Slave_SQL_Running: Yes		<--- Flush de cambios enviados por Master ( DEBE IR ON )
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: 
+           Replicate_Do_Table: 
+       Replicate_Ignore_Table: 
+      Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+                   Last_Errno: 0
+                   Last_Error: 
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 100976988
+              Relay_Log_Space: 239064469
+              Until_Condition: None
+               Until_Log_File: 
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File: 
+           Master_SSL_CA_Path: 
+              Master_SSL_Cert: 
+            Master_SSL_Cipher: 
+               Master_SSL_Key: 
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error: 
+               Last_SQL_Errno: 0
+               Last_SQL_Error: 
+  Replicate_Ignore_Server_Ids: 
+             Master_Server_Id: 9
+               Master_SSL_Crl: 
+           Master_SSL_Crlpath: 
+                   Using_Gtid: Current_Pos
+                  Gtid_IO_Pos: 2-9-3700051
+      Replicate_Do_Domain_Ids: 2
+  Replicate_Ignore_Domain_Ids: 
+                Parallel_Mode: optimistic
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for the slave I/O thread to update it
+1 row in set (0.00 sec)
+
+
+#RAM ASIGN ON MYSQL
+root@opp-capa-db02 [(none)] > show global variables like '%buffer%';
++-------------------------------------+----------------+
+| Variable_name                       | Value          |
++-------------------------------------+----------------+
+| aria_pagecache_buffer_size          | 134217728      |
+| aria_sort_buffer_size               | 268434432      |
+| bulk_insert_buffer_size             | 16777216       |
+| innodb_buffer_pool_chunk_size       | 134217728      |
+| innodb_buffer_pool_dump_at_shutdown | ON             |
+| innodb_buffer_pool_dump_now         | OFF            |
+| innodb_buffer_pool_dump_pct         | 25             |
+| innodb_buffer_pool_filename         | ib_buffer_pool |
+| innodb_buffer_pool_instances        | 3              |
+| innodb_buffer_pool_load_abort       | OFF            |
+| innodb_buffer_pool_load_at_startup  | ON             |
+| innodb_buffer_pool_load_now         | OFF            |
+| innodb_buffer_pool_populate         | OFF            |
+| innodb_buffer_pool_size             | 3221225472     | <--- /1024/1024/1024 = size in GB para RAM asignada.
+| innodb_change_buffer_max_size       | 25             |
+| innodb_change_buffering             | all            |
+| innodb_log_buffer_size              | 16777216       |
+| innodb_sort_buffer_size             | 1048576        |
+| join_buffer_size                    | 2097152        |
+| join_buffer_space_limit             | 2097152        |
+| key_buffer_size                     | 131072         |
+| mrr_buffer_size                     | 262144         |
+| myisam_sort_buffer_size             | 134216704      |
+| net_buffer_length                   | 16384          |
+| preload_buffer_size                 | 32768          |
+| read_buffer_size                    | 1048576        |
+| read_rnd_buffer_size                | 524288         |
+| sort_buffer_size                    | 1048576        |
+| sql_buffer_result                   | OFF            |
++-------------------------------------+----------------+
+29 rows in set (0.00 sec)
+
+#SHOW VARIABLES
+root@opp-prod-db01 [(none)] > show variables like "%slow%";
+
+#GALERA MEMBERS
+mysql -u${USERNAME} -p${PASSWORD} -e "SHOW STATUS LIKE 'wsrep_cluster_size';"
+
+#GALERA COMMANDS
+ ll /srv/mysqldata/datadir/ -a
+ ll /srv/mysqldata/datadir/.sst -rt
+ cat /srv/mysqldata/datadir/grastate.dat 
+ galera_recovery 
+ which galera_recovery
+ vim /usr/bin/galera_recovery 
+ galera_recovery 
+ ll /tmp/
+ cat /tmp/wsrep_recovery.ZP1JSH 
+ cat /usr/lib/systemd/system/mariadb.service

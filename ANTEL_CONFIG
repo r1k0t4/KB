@@ -1,0 +1,63 @@
+# RUTAS
+default via 192.168.30.1 dev eth1 		## Default por servicios
+#10.68.174.0/24 via 192.168.130.1 dev eth0   	## MTA, NTP, DNS, etc.	# SERV
+10.68.172.16 via 192.168.130.1 dev eth0     	## SSH, Proxy.		# MGMT
+172.16.0.0/16 via 192.168.130.1 dev eth0    	## Zabbix, BKP, Jenkins, etc.	# MGMT
+
+# DNSs
+# 10.68.174.13
+# 10.68.174.14
+
+echo quit |telnet 10.68.174.13 53
+echo quit |telnet 10.68.174.14 53
+
+# MTA
+# mta.stp.prod.vpc.sva.antel.com.uy
+
+echo quit |telnet mta.stp.prod.vpc.sva.antel.com.uy 25
+
+# NTP
+#ntpq -pn
+#ntpq -p
+#/etc/ntp.conf
+#/etc/chrony.conf
+
+nsin01.stp.prod.mgmt.sva.antel.com.uy
+nsin02.stp.prod.mgmt.sva.antel.com.uy
+
+# ZABBIX - VIA MGMT
+# ServerActive=172.16.2.42:10051
+
+grep ^ServerActive /etc/zabbix/zabbix_agentd.conf
+echo quit | telnet 172.16.2.42 10051
+
+# PROXY [ 10.68.172.16:3128 ]
+# proxy.stp.prod.vpc.sva.antel.com.uy:3128
+
+echo quit |telnet proxy.stp.prod.vpc.sva.antel.com.uy 3128
+
+# RHSM
+# proxy_hostname = proxy.stp.prod.vpc.sva.antel.com.uy
+# proxy_port = 3128
+
+grep -E proxy_port\|hostname /etc/rhsm/rhsm.conf
+
+# YUM
+# proxy=http://proxy.stp.prod.vpc.sva.antel.com.uy:3128
+
+grep -i proxy /etc/yum.conf 
+
+
+##################################################
+ORIGEN MGMT DBs > 172.16.31.14 y 172.16.31.15
+DST MGMT SSH >10.68.172.16:22
+DST MGMT ZABBIX > 172.16.2.42:10050
+DST MGMT PROXY > 10.68.172.16:3128
+
+ORIGEN SVC DBs > 10.68.212.140 y 10.68.212.141
+DST SVC NTP > 10.68.174.13:123
+DST SVC NTP > 10.68.174.14:123
+DST SVC DNS > 10.68.174.13:53
+DST SVC DNS > 10.68.174.14:53
+DST SVC MTA > 10.68.174.11:25,110,465,587,995
+DST SVC MTA > 10.68.174.12:25,110,465,587,995

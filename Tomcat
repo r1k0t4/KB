@@ -1,0 +1,34 @@
+#TOMCAT-MANAGER
+tomcat-manager --quiet -u ""${USU}"" -p ""${PAS}"" http://prep-tomcat2:8080/manager status | grep worker | wc -l
+
+#JMX
+https://docs.cyclopsgroup.org/jmxterm
+https://rmoff.net/2018/09/19/exploring-jmx-with-jmxterm/
+java -jar ~/Downloads/jmxterm-1.0.0-uber.jar --url localhost:9090 -u tomcat -p tomcat
+
+#JCMD
+https://community.cloudera.com/t5/Community-Articles/How-to-collect-threaddump-using-jcmd-and-analyse-it/ta-p/248391
+
+Example1: Classes taking the most memory are listed at the top, and classes are listed in a descending order.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.class_histogram  > /tmp/22421_ClassHistogram.txt
+
+Example2: Generate Heap Dump
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.heap_dump  /tmp/test123.hprof
+
+Example3: Explicitly request JVM to trigger a Garbage Collection Cycle.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.run
+
+Example4: Generate Thread dump.
+
+usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  Thread.print
+
+Example5: List JVM properties.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  VM.system_properties
+
+Example6: The Command line options along with the CLASSPATH setting.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $ PID  VM.command_line

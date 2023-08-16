@@ -1,0 +1,175 @@
+https://www.ochobitshacenunbyte.com/2019/07/01/comando-at-programacion-de-tareas-unicas-en-linux/
+1. Programar un trabajo utilizando el comando at
+
+El siguiente ejemplo programará el comando «sh copia-seguridad.sh» para que se ejecute una vez a las 10:00 PM.
+
+1
+2
+3
+4
+5
+
+	
+
+davidochobits@servubuntu01:~$ at 10:00 PM
+warning: commands will be executed using /bin/sh
+at> sh copia-seguridad.sh
+at> 
+job 1 at Mon Jul  1 22:00:00 2019
+
+Como se observa utilizamos ^D para salir de la consola.
+
+También podemos programar el mismo trabajo de esta forma:
+
+1
+
+	
+
+echo "sh copia-seguridad.sh" | at 10:00 PM
+
+2. Listar los trabajos programados usando atq
+
+Si utilizamos el usuario root, podemos listar los trabajos programados de todos los usuarios, mediante el comando atq En cambio sí utilizamos la misma herramienta con un usuario que no sea root, únicamente listara los trabajos del propio usuario.
+
+Tal y como se muestra en el ejemplo:
+
+1
+2
+3
+
+	
+
+root@servubuntu01:~# atq
+1       Mon Jul  1 22:00:00 2019 a davidochobits
+2       Tue Jul  2 07:00:00 2019 a minecraft
+
+En la información anterior, tenemos el número de trabajo, la fecha de programación y el usuario que lo ha programado.
+3. Eliminar un trabajo programado usando atrm
+
+Mediante el comando atrm podemos eliminar un trabajo en concreto, tal y como se observa en el ejemplo:
+
+1
+2
+3
+
+	
+
+root@servubuntu01:~# atrm 2
+root@servubuntu01:~# atq
+1       Mon Jul  1 22:00:00 2019 a davidochobits
+
+4. Comprobar el contenido de programado en el trabajo
+
+El comando atq solo nos muestra la lista de trabajos, pero si deseamos verificar qué secuencias de comandos están programados para esa tarea, lo podemos conseguir de la siguiente manera:
+
+1
+
+	
+
+at -c 1
+
+Y nos mostrará información del trabajo en concreto.
+Ejemplos de uso de at
+1. Programar una tarea a las cinco de la tarde
+
+1
+
+	
+
+at 05:00 PM
+
+2. Programar una tarea a las tres de la mañana
+
+1
+
+	
+
+at 03:00 AM
+
+3. Programar una tarea a las siete de la mañana del próximo domingo
+
+1
+
+	
+
+at 07:00 AM Sun
+
+4. Programar la tarea a las 11:00 AM del próximo 14 de abril
+
+1
+
+	
+
+at 11:00 AM April 14
+
+5. Programar una tarea a las 10:00 AM del próximo 22 de junio de 2021
+
+1
+2
+3
+
+	
+
+#Lo podemos hacer de dos formas:
+at 10:00 AM 6/22/2021
+at 10:00 AM 6.22.2021
+
+6. Programar una tarea a las 11 de la mañana el mismo día del próximo mes
+
+1
+
+	
+
+at 11:00 AM next month
+
+7. Programar una tarea para mañana a las 11 AM
+
+1
+
+	
+
+at 11:00 AM tomorrow
+
+8. Programar una tarea de aquí a una hora
+
+1
+
+	
+
+at now + 1 hour
+
+9. Programar una tarea de aquí a 30 minutos
+
+1
+
+	
+
+at now + 30 minutes
+
+10. Programar una tarea de aquí a una y dos semanas
+
+1
+2
+
+	
+
+at now + 1 week
+at now + 2 weeks
+
+11. Programar una tarea de aquí a uno y dos años
+
+1
+2
+
+	
+
+at now + 1 year
+at now + 2 years
+
+12. Programar una tarea a media noche
+
+1
+
+	
+
+at midnight

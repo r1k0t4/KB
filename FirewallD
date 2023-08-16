@@ -1,0 +1,53 @@
+#Source
+#https://www.rootusers.com/how-to-use-firewalld-rich-rules-and-zones-for-filtering-and-nat/
+
+# REMOVE / ADD SERVICE
+firewall-cmd --remove-service=ssh --zone=public
+
+# ADD PORT
+firewall-cmd --add-port=3314/tcp --permanent
+
+# ADD RICH RULE
+firewall-cmd --zone=public --add-rich-rule='rule family=ipv4 source address=10.0.50.10 forward-port port=42343 protocol=tcp to-port=22'
+
+# List SPECIFIC zone:
+firewall-cmd --zone=public --list-all
+
+# Get active zones:
+firewall-cmd --get-active-zones
+
+# Get DEFAULT zone:
+firewall-cmd --get-default-zone
+
+# Create new zone
+--new-zone=testig
+# Set it default
+--set-default-zone=testing
+
+# Define source IP / NET
+--zone=testing --add-source=10.10.10.0/24
+
+# PORT Manage
+	--add-port=___/tcp
+	--list-ports
+	--remove-port=___/tcp
+
+# RICH RULES Management
+
+	# ACCEPT TRAFFIC
+	--add-rich-rule='rule family=ipv4 source address=10.0.0.0/24 destination address=192.168.0.10/32 port port=8080-8090 protocol=tcp accept'
+
+	# REJECT TRAFFIC
+	--add-rich-rule='rule family=ipv4 source address=192.168.0.10/24 reject'
+
+	# List them
+	--list-rich-rules
+
+	# Remove rich rule
+	--remove-rich-rule='___'
+
+	# Limit ssh connections to 10 per minute:
+	--add-rich-rule='rule service name=ssh limit value=10/m accept'
+
+# Once you are happy with the firewall setting, then make them persistant by running:
+firewall-cmd --runtime-to-permanent

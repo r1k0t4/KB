@@ -1,0 +1,79 @@
+https://linuxcommand.org/lc3_adv_tput.php
+
+Text Effects
+Like the capnames used for cursor manipulation, the following capnames output strings of control codes that affect the way our terminal displays text characters:
+
+Text effects capnames
+Capname	Description
+bold	Start bold text
+smul	Start underlined text
+rmul	End underlined text
+rev	Start reverse video
+blink	Start blinking text
+invis	Start invisible text
+smso	Start “standout” mode
+rmso	End “standout” mode
+sgr0	Turn off all attributes
+setaf <value>	Set foreground color
+setab <value>	Set background color
+Some capabilities, such as underline and standout, have capnames to turn the attribute both on and off while others only have a capname to turn the attribute on. In these cases, the sgr0 capname can be used to return the text rendering to a “normal” state. Here is a simple script that demonstrates the common text effects:
+
+    #!/bin/bash
+
+    # tput_characters - Test various character attributes
+
+    clear
+
+    echo "tput character test"
+    echo "==================="
+    echo
+
+    tput bold;  echo "This text has the bold attribute.";     tput sgr0
+
+    tput smul;  echo "This text is underlined (smul).";       tput rmul
+
+    # Most terminal emulators do not support blinking text (though xterm
+    # does) because blinking text is considered to be in bad taste ;-)
+    tput blink; echo "This text is blinking (blink).";        tput sgr0
+
+    tput rev;   echo "This text has the reverse attribute";   tput sgr0
+
+    # Standout mode is reverse on many terminals, bold on others. 
+    tput smso;  echo "This text is in standout mode (smso)."; tput rmso
+
+    tput sgr0
+    echo
+tput_characters
+tput_characters
+Text Color
+Most terminals support 8 foreground text colors and 8 background colors (though some support as many as 256). Using the setaf and setab capabilities, we can set the foreground and background colors. The exact rendering of colors is a little hard to predict. Many desktop managers impose “system colors” on terminal windows, thereby modifying foreground and background colors from the standard. Despite this, here are what the colors should be:
+
+Text colors
+Value	Color
+0	Black
+1	Red
+2	Green
+3	Yellow
+4	Blue
+5	Magenta
+6	Cyan
+7	White
+8	Not used
+9	Reset to default color
+The following script uses the setaf and setab capabilities to display the available foreground/background color combinations:
+
+    #!/bin/bash
+
+    # tput_colors - Demonstrate color combinations.
+
+    for fg_color in {0..7}; do
+        set_foreground=$(tput setaf $fg_color)
+        for bg_color in {0..7}; do
+            set_background=$(tput setab $bg_color)
+            echo -n $set_background$set_foreground
+            printf ' F:%s B:%s ' $fg_color $bg_color
+        done
+        echo $(tput sgr0)
+    done
+tput_colors
+tput_colors

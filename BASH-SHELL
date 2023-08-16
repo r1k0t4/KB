@@ -1,0 +1,5 @@
+#EXPLAINED SHELL[!]
+https://explainshell.com/explain?cmd=cut+-f+1+%7C+paste+-s+-d%2B+%7C+bc
+
+#IFS
+https://www.baeldung.com/linux/ifs-shell-variable

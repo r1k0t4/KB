@@ -1,0 +1,24 @@
+grep -E proxy_port\|hostname /etc/rhsm/rhsm.conf
+
+# Server hostname:
+hostname = subscription.rhn.redhat.com
+proxy_hostname = mgmt001.stpva.prod.vpcantel.in
+proxy_port = 3128
+
+vim /etc/rhsm/rhsm.conf
+
+grep -E proxy_port\|hostname /etc/rhsm/rhsm.conf
+
+# Server hostname:
+hostname = subscription.rhn.redhat.com
+#proxy_hostname = mgmt001.stpva.prod.vpcantel.in
+proxy_hostname = proxy.stp.prod.vpc.sva.antel.com.uy
+proxy_port = 3128
+
+subscription-manager list
+subscription-manager remove --all
+subscription-manager clean
+subscription-manager refresh
+subscription-manager register --force --auto-attach --username=Plataforma_de_servicios --password=4sv4c4ntel
+subscription-manager refresh
+subscription-manager list

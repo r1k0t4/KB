@@ -1,0 +1,27 @@
+# LACPASS de Chile
+
+# SMS TEST ?
+
+[root@test-backendcovid-app04 ~]# cat sms.json 
+{
+	"message":"Hola",
+	"code":"1234",
+	"phone":"091608490"
+}
+
+[root@test-backendcovid-app04 ~]# #curl -k -H "Content-Type: application/json" -X Post -d @sms.json https://msp-test.sva.antel.com.uy/sms_msp
+
+# DATA COVID
+
+[root@test-backendcovid-app03 ~]# cat DataCovid.json 
+{
+  "CountryCode":"858", 	
+  "DocumentType": "68909",
+  "DocumentNumber": "53677010"
+}
+[root@test-backendcovid-app03 ~]# 
+
+
+[root@test-backendcovid-app03 ~]#  curl -k --header "Content-Type: application/json" --request POST --data @DataCovid.json https://preprodws.coronavirus.salud.red.uy/SSPAPI/rest/ue/getDataCovid
+{"DataCovidJSON":"{\"PersonInfo\":{\"CountryCode\":\"858\",\"DocumentType\":\"68909\",\"DocumentNumber\":\"53677010\",\"GivenNames\":\"MARIA BELEN\",\"FamilyNames\":\"PRIMAPELLIDOdeMARIA SEGAPELLIDODEMARIA\",\"DateOfBirth\":\"00000000\"},\"Passport\":{\"QRCode\":\"data:image/png;base64, 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\",\"Expiration\":\"2021-12-25T00:00:00\"},\"Vaccination\":{\"VaccinationCode\":\"fdb362229544\"},\"Success\":true,\"MessageError\":\"\"}"}
+[root@test-backendcovid-app03 ~]#

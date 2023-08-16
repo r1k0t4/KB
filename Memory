@@ -1,0 +1,132 @@
+#PS_MEM
+#https://www.linuxuprising.com/2019/04/psmem-shows-per-program-memory-usage-on.html
+wget https://raw.githubusercontent.com/pixelb/ps_mem/master/ps_mem.py
+sudo install ps_mem.py /usr/bin/ps_mem
+rm ps_mem.py
+
+#SMEM
+https://www.selenic.com/smem/
+sudo yum install smem
+
+Show basic process information 	smem
+Show library-oriented view 	smem -m
+Show user-oriented view 	smem -u
+Show system view 	smem -R 4G -K /path/to/vmlinux -w
+Show totals and percentages 	smem -t -p	<--- TOTAL + PORCENTAJE
+Show different columns 	smem -c "name user pss"
+Sort by reverse RSS 	smem -s rss -r
+Show processes filtered by mapping 	smem -M libxml
+Show mappings filtered by process 	smem -m -P [e]volution
+Read data from capture tarball 	smem --source capture.tar.gz
+Show a bar chart labeled by pid 	smem --bar pid -c "pss uss"
+Show a pie chart of RSS labeled by name 	smem --pie name -s rss 
+
+### CALCULO DE SWAP CON SMEM Y PS_MEM ( AMBOS ACERTADOS EN USO DE SWAP )
+
+[root@opp-capa-db02 SLAVE-DB02 .32 ~ ]#: smem -t -p | tail
+71639 root     sshd: root@pts/2               0.00%    0.02%    0.04%    0.07% 
+    1 root     /usr/lib/systemd/systemd --    0.12%    0.04%    0.04%    0.05% 
+ 1119 root     /usr/sbin/rsyslogd -n          9.84%    0.02%    0.04%    0.07% 
+  506 root     /usr/lib/systemd/systemd-jo    0.15%    0.03%    0.05%    0.08% 
+83892 root     python /usr/bin/smem -t -p     0.00%    0.12%    0.12%    0.14% 
+66114 root     java -jar glowroot-central.    0.00%    4.92%    5.00%    5.10% 
+65538 cassandra /usr/lib/jvm/java-1.8.0-ope   28.76%   33.35%   33.43%   33.53% 
+67479 mysql    /usr/sbin/mysqld              44.78%   51.80%   51.81%   51.83% 
+-------------------------------------------------------------------------------
+   40 8                                      88.68%   90.47%   90.76%   91.30% 
+
+[root@opp-capa-db02 SLAVE-DB02 .32 ~ ]#: ps_mem -p 65538,67479 -S
+ Private  +   Shared  =  RAM used   Swap used	Program
+
+  2.5 GiB +   7.3 MiB =   2.5 GiB   353.2 MiB	java
+  3.9 GiB + 505.0 KiB =   3.9 GiB   549.9 MiB	mysqld
+---------------------------------
+                          6.5 GiB
+=================================
+Warning: Swap is over-estimated by this system for each program,
+so totals are not reported.
+[root@opp-capa-db02 SLAVE-DB02 .32 ~ ]#: 
+
+
+#FREE
+free -m
+
+#PS
+ps -o pid,user,%mem,command ax | sort -b -k3 -r
+
+[root@opp-prod-app01 ~]# ps -o pid,user,%mem,command ax | sort -b -k3 -r
+
+#TOP
+top -> f -> space on SWAP -> "s" [swap sort] -> q
+
+#CLEAN CACHE
+sync; echo 1 > /proc/sys/vm/drop_caches
+
+# Transparent HugePage (THP)
+# https://www.golinuxcloud.com/check-transparent-hugepage-usage-per-process/
+# https://supportportal.juniper.net/s/article/Contrail-Understanding-Transparent-Huge-Pages-THP?language=en_US
+# https://access.redhat.com/solutions/46111
+# 147204 ++ 146665
+
+# Get PIDS
+# awk  '/AnonHugePages/ { if($2>4){print FILENAME " " $0; system("ps -fp " gensub(/.*\/([0-9]+).*/, "\\1", "g", FILENAME))}}' /proc/*/smaps
+# grep -e AnonHugePages /proc/*/smaps | awk '{ if($2>4) print $0} ' | awk -F "/" '{print $0; system("ps -fp" $3)}'
+
+[cl@cl ~]$ grep -i huge /proc/meminfo 
+AnonHugePages:    468992 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+[cl@cl ~]$
+
+# Disable at run time
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+# Walkaround to remove from grub && tuned service
+https://access.redhat.com/solutions/1320153
+
+# Cache
+# SLAB CACHE 
+https://unix.stackexchange.com/questions/166558/how-to-check-which-process-is-using-most-memory
+
+SLABTOP(1)
+NAME
+       slabtop - display kernel slab cache information in real time
+
+[root@db02 ~]# slabtop -s=u -o
+ Active / Total Objects (% used)    : 2711236 / 2729831 (99.3%)
+ Active / Total Slabs (% used)      : 63904 / 63904 (100.0%)
+ Active / Total Caches (% used)     : 64 / 91 (70.3%)
+ Active / Total Size (% used)       : 535439.71K / 543847.38K (98.5%)
+ Minimum / Average / Maximum Object : 0.01K / 0.20K / 8.00K
+
+  OBJS ACTIVE  USE OBJ SIZE  SLABS OBJ/SLAB CACHE SIZE NAME                   
+960531 960531 100%    0.10K  24629       39     98516K buffer_head            
+477078 476652  99%    0.19K  11359       42     90872K dentry                 
+316608 316002  99%    0.06K   4947       64     19788K kmalloc-64             
+[root@db02 ~]# 
+
+# Aditional slab info
+
+[root@db02 ~]# vmstat -m
+kmalloc-16                 5376   5376     16    256
+kmalloc-8                  8192   8192      8    512
+kmem_cache_node             512    512     64     64
+kmem_cache                  288    288    256     32
+
+https://en.wikipedia.org/wiki/Slab_allocation
+"A slab is the amount by which a cache can grow or shrink"
+
+# Get cachd list
+https://serverfault.com/questions/278454/is-it-possible-to-list-the-files-that-are-cached
+https://github.com/tobert/pcstat
+
+git clone https://github.com/tobert/pcstat.git
+cd pcstat
+go build
+sudo cp -a pcstat /usr/local/bin
+pcstat /usr/local/bin/pcstat

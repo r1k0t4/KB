@@ -1,0 +1,32 @@
+#https://access.redhat.com/solutions/38628
+How do I determine which dm-X device maps to each device mapper device on Red Hat Enterprise Linux? 
+
+find /dev/ -name "dm-*" -exec readlink -n {} \; -exec echo " -->" {} \;
+
+# Atrributes
+https://www.unixarena.com/2013/08/redhat-linux-lvm-volume-attributes.html/
+
+# underlying physical volumes use
+[root@mylinz ~]# lvs -a -o +devices
+LV      VG        Attr   LSize   Origin Snap%  Move Log Copy%  Convert Devices
+vol1    uavg      -wi-ao 100.00m                                   /dev/sdd1(13)
+lv_root vg_mylinz -wi-ao  16.54g                                   /dev/sda2(0)
+lv_swap vg_mylinz -wi-ao   2.97g                                   /dev/sda2(4234)
+[root@mylinz ~]#
+
+# Read
+echo "- - -" > /sys/class/scsi_host/host0/scan
+
+for host in `ls /sys/class/scsi_host/`;do
+echo "- - -" >/sys/class/scsi_host/${host}/scan;
+done
+
+# Block
+echo 1>/sys/class/block/sdd/device/rescan
+OR
+echo 1>/sys/class/scsi_device/X:X:X:X/device/block/device/rescan
+
+
+Note : Sending “– – -” to /sys/class/scsi_host/hostX/scan is scanning SCSI host adapters for new disks on every channel (first -), every target (second -), and every device i.e. disk/lun (third -) i.e. CTD format. This will only help to scan when new devices are attached to the system. It will not help us to re-scan already identified devices.
+
+That’s why we have to send “1” to /sys/class/block/XYZ/device/rescan to respective SCSI block device to refresh device information like the size. So this will be helpful here since our device is already identified by the kernel but we want the kernel to re-read its new size and update itself accordingly.

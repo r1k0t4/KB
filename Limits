@@ -1,0 +1,24 @@
+# ulimits
+
+https://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
+https://www.tecmint.com/increase-set-open-file-limits-in-linux/
+
+[root@app02.test ~]# cat /etc/security/limits.conf | grep -Ev ^'(#|$)'
+*	 hard nofile 400000
+*	 soft nofile 400000
+
+[root@app02.test ~]# sysctl -p
+
+[root@app02.test ~]# ulimit -Sn && ulimit -Hn
+1024
+4096
+[root@app02.test ~]# logout
+Connection to 192.168.4.179 closed.
+
+[cl@cl ~]$ ssh test-tomcat02.hb.com.uy 
+Last login: Wed Apr 27 12:48:32 2022 from 10.7.12.14
+[root@app02.test ~]# ulimit -Sn && ulimit -Hn
+400000
+400000
+[root@app02.test ~]# 
+

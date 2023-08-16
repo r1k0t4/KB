@@ -1,0 +1,21 @@
+#PARAM HABDLING
+
+MYAPPS="dur;flo"
+IFS=';' read -a MYAPPS <<< "${MYAPPS}"
+
+echo ${MYAPPS}
+dur
+
+echo ${MYAPPS[@]}
+dur flo
+
+echo ${!MYAPPS[@]}
+0 1
+
+for i in ${!MYAPPS[@]};		#Enumero APPS in
+do
+	echo ${MYAPPS[$i]}	#STDOUT APP enumerada
+done
+
+dur
+flo

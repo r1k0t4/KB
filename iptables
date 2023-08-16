@@ -1,0 +1,8 @@
+#DISABLES ( ENABLE ALL TRAFFIC )
+iptables -I INPUT 1 -j ACCEPT
+
+#RE-ENABLE ( REMOVE ALL RULE )
+iptables -D INPUT 1
+
+#LIST
+iptables -L -v -n

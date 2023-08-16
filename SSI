@@ -1,0 +1,69 @@
+#HOSPITAL BRITANICO
+
+> INTRO
+153421
+
+> DEMONIOS
+141463
+
+> CERT APP ENFERMERIA
+144348
+
+> sudo ssh root@172.23.0.42 -L 800:127.0.0.1:80 -L 80:172.23.0.50:80 -L 443:172.23.0.50:443 -L 8080:127.0.0.1:8080
+
+> Open Files Limits tomcat5
+147399
+
+> Nivelacion scripts + Jenkins ( ANsible )
+162156
+
+#OPP
+> THPs
+148673
+
+#TATA
+> SQL SERVER ZABBIX
+141249
+
+> SELINUX
+145463
+
+#HG
+
+##ANTEL
+> EPAGOS
+144427
+
+> DEPLOY PANDO
+138707
+
+###AGESIC
+> DESPLPIEGUE FULL + PGSQL
+143768
+
+#SUY
+> WAF
+142796
+
+> Update FW Appliance BPS
+145591
+
+#FSJ
+> FS
+142796
+
+#LetsEncrypt
+> Presidencia
+143797
+
+#Certificados / Keystore / SSL
+> 144283
+
+# KH
+> Terradorm
+clorenzo(su)=>/opt/automation/iac/lezama/SHG-I-PRUEBAS/01-SHG-I-PRUEBAS-PROD
+~/10052022
+
+# MONGODB
+> Template / Monitoring
+163750

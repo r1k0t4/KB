@@ -1,0 +1,2 @@
+#NFS_AGESIC
+mount | grep -q /mnt/veeam || mount -t nfs 10.240.45.10:/HG-Logs /mnt/veeam -O user=LogsHG,pass=20HGlogs20

@@ -1,0 +1,391 @@
+https://docs.graylog.org/en/3.1/pages/installation/os/centos.html
+
+[root@centoslab01 yum.repos.d]# ps_mem -s
+ Private  +   Shared  =  RAM used	Program
+
+  4.0 KiB +  57.0 KiB =  61.0 KiB	/usr/sbin/lvmetad -f
+ 52.0 KiB +  65.0 KiB = 117.0 KiB	/usr/sbin/gssproxy -D
+ 20.0 KiB + 103.0 KiB = 123.0 KiB	/usr/bin/VGAuthService -s
+ 40.0 KiB + 101.0 KiB = 141.0 KiB	postgres: wal writer process                          
+ 96.0 KiB +  47.5 KiB = 143.5 KiB	/usr/lib/systemd/systemd-udevd
+128.0 KiB +  17.5 KiB = 145.5 KiB	/sbin/agetty --noclear tty1 linux
+128.0 KiB +  54.0 KiB = 182.0 KiB	/usr/sbin/crond -n
+ 80.0 KiB + 103.5 KiB = 183.5 KiB	postgres: logger process                              
+ 68.0 KiB + 117.0 KiB = 185.0 KiB	postgres: checkpointer process                        
+140.0 KiB +  90.5 KiB = 230.5 KiB	/usr/libexec/postfix/master -w
+168.0 KiB +  94.5 KiB = 262.5 KiB	qmgr -l -t unix -u
+200.0 KiB +  79.5 KiB = 279.5 KiB	/sbin/auditd
+108.0 KiB + 190.0 KiB = 298.0 KiB	/usr/sbin/sshd -D
+188.0 KiB + 131.0 KiB = 319.0 KiB	postgres: stats collector process                     
+544.0 KiB +  65.5 KiB = 609.5 KiB	/usr/lib/systemd/systemd-logind
+ 52.0 KiB + 631.0 KiB = 683.0 KiB	postgres: writer process                              
+524.0 KiB + 189.5 KiB = 713.5 KiB	postgres: autovacuum launcher process                 
+560.0 KiB + 164.5 KiB = 724.5 KiB	/usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation
+820.0 KiB + 206.0 KiB =   1.0 MiB	/usr/bin/vmtoolsd
+828.0 KiB + 370.0 KiB =   1.2 MiB	/usr/sbin/NetworkManager --no-daemon
+  1.4 MiB + 183.5 KiB =   1.6 MiB	-bash
+  1.4 MiB + 286.5 KiB =   1.7 MiB	/usr/bin/python2 -Es /usr/sbin/tuned -l -P
+  1.8 MiB + 917.5 KiB =   2.7 MiB	pickup -l -t unix -u
+  3.0 MiB + 118.5 KiB =   3.1 MiB	/usr/lib/systemd/systemd --switched-root --system --deserialize 22
+  1.3 MiB +   2.4 MiB =   3.7 MiB	/usr/sbin/rsyslogd -n
+  3.5 MiB + 366.5 KiB =   3.8 MiB	/usr/lib/polkit-1/polkitd --no-debug
+  3.2 MiB +   1.1 MiB =   4.2 MiB	sshd: root@pts/0    
+  1.9 MiB +   2.4 MiB =   4.3 MiB	/usr/lib/systemd/systemd-journald
+  9.7 MiB + 670.0 KiB =  10.3 MiB	/usr/pgsql-9.4/bin/postgres -D /var/lib/pgsql/9.4/data
+ 26.2 MiB + 450.0 KiB =  26.6 MiB	/usr/bin/python2 -Es /usr/sbin/firewalld --nofork --nopid
+---------------------------------
+                         69.6 MiB
+=================================
+[root@centoslab01 yum.repos.d]# 
+
+
+https://docs.graylog.org/en/3.1/pages/installation/operating_system_packages.html#rpm-yum-dnf
+
+[root@centoslab01 ~]# vim /etc/yum.repos.d/graylog.repo
+
+[graylog]
+name=graylog
+baseurl=https://packages.graylog2.org/repo/el/stable/3.1/$basearch/
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-graylog
+
+[root@centoslab01 yum.repos.d]# yum install graylog-server
+
+
+[root@centoslab01 yum.repos.d]# vim /etc/graylog/server/server.conf 
+
+[root@centoslab01 server]# echo -n "Enter Password: " && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1
+Enter Password: tacataca-picapiedras
+0c04909d96286d11f743dd81023cfc62b61972fbaf7a9a6a9562f04440f0db0d
+
+
+[root@centoslab01 yum.repos.d]# grep password /etc/graylog/server/server.conf 
+password_secret = tacataca-picapiedras
+root_password_sha2 = 0c04909d96286d11f743dd81023cfc62b61972fbaf7a9a6a9562f04440f0db0d
+
+https://docs.graylog.org/en/3.1/pages/installation/os/centos.html
+[root@centoslab01 ~]# yum install java-1.8.0-openjdk-headless.x86_64
+
+https://docs.mongodb.com/master/tutorial/install-mongodb-on-red-hat/
+[root@centoslab01 ~]# vim /etc/yum.repos.d/mongodb-org-4.2.rep
+
+[mongodb-org-4.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+
+[root@centoslab01 ~]# sudo yum install -y mongodb-org-4.2.2 mongodb-org-server-4.2.2 mongodb-org-shell-4.2.2 mongodb-org-mongos-4.2.2 mongodb-org-tools-4.2.2
+
+https://docs.graylog.org/en/3.1/pages/installation/os/centos.html
+
+https://www.elastic.co/guide/en/elasticsearch/reference/6.7/rpm.html
+[root@centoslab01 server]# rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+[root@centoslab01 server]# vim /etc/yum.repos.d/elastic.repo
+[elasticsearch-6.x]
+name=Elasticsearch repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+[root@centoslab01 server]# yum install -y elasticsearch
+
+[root@centoslab01 server]# grep -E cluster.name\|index /etc/elasticsearch/elasticsearch.yml
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+cluster.name: graylog
+#action.auto_create_index: false
+action.auto_create_index: .monitoring*,.watches,.triggered_watches,.watcher-history*,.ml*
+[root@centoslab01 server]# 
+
+[root@centoslab01 yum.repos.d]# systemctl daemon-reload
+[root@centoslab01 yum.repos.d]# systemctl enable mongod
+[root@centoslab01 yum.repos.d]# systemctl start mongod
+[root@centoslab01 yum.repos.d]# systemctl enable graylog-server
+[root@centoslab01 yum.repos.d]# systemctl start graylog-server
+[root@centoslab01 yum.repos.d]# systemctl enable elasticsearch
+[root@centoslab01 yum.repos.d]# systemctl start elasticsearch
+
+
+
+[root@centoslab01 server]# ps_mem -s
+ Private  +   Shared  =  RAM used	Program
+
+  4.0 KiB +  12.5 KiB =  16.5 KiB	/sbin/agetty --noclear tty1 linux
+  4.0 KiB +  41.5 KiB =  45.5 KiB	/usr/lib/systemd/systemd-udevd
+  4.0 KiB +  50.0 KiB =  54.0 KiB	/usr/sbin/lvmetad -f
+  4.0 KiB +  59.0 KiB =  63.0 KiB	/usr/sbin/gssproxy -D
+  4.0 KiB +  74.0 KiB =  78.0 KiB	/usr/bin/VGAuthService -s
+  4.0 KiB +  86.5 KiB =  90.5 KiB	postgres: logger process                              
+ 44.0 KiB +  96.0 KiB = 140.0 KiB	postgres: wal writer process                          
+ 44.0 KiB +  96.0 KiB = 140.0 KiB	postgres: checkpointer process                        
+104.0 KiB +  40.0 KiB = 144.0 KiB	/usr/sbin/crond -n
+ 56.0 KiB + 120.0 KiB = 176.0 KiB	postgres: writer process                              
+108.0 KiB +  86.5 KiB = 194.5 KiB	pickup -l -t unix -u
+124.0 KiB +  86.5 KiB = 210.5 KiB	/usr/libexec/postfix/master -w
+188.0 KiB +  34.5 KiB = 222.5 KiB	/bin/sh /usr/share/graylog-server/bin/graylog-server
+160.0 KiB +  90.5 KiB = 250.5 KiB	qmgr -l -t unix -u
+192.0 KiB +  65.5 KiB = 257.5 KiB	/sbin/auditd
+100.0 KiB + 182.0 KiB = 282.0 KiB	/usr/sbin/sshd -D
+192.0 KiB + 131.0 KiB = 323.0 KiB	postgres: stats collector process                     
+160.0 KiB + 222.5 KiB = 382.5 KiB	sshd: root@pts/0    
+344.0 KiB + 153.0 KiB = 497.0 KiB	/usr/pgsql-9.4/bin/postgres -D /var/lib/pgsql/9.4/data
+524.0 KiB +  65.5 KiB = 589.5 KiB	/usr/lib/systemd/systemd-logind
+508.0 KiB + 183.5 KiB = 691.5 KiB	postgres: autovacuum launcher process                 
+540.0 KiB + 161.5 KiB = 701.5 KiB	/usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation
+668.0 KiB +  49.5 KiB = 717.5 KiB	/usr/share/elasticsearch/modules/x-pack-ml/platform/linux-x86_64/bin/controller
+528.0 KiB + 274.5 KiB = 802.5 KiB	/usr/bin/python2 -Es /usr/sbin/tuned -l -P
+844.0 KiB + 218.0 KiB =   1.0 MiB	/usr/bin/vmtoolsd
+776.0 KiB + 373.0 KiB =   1.1 MiB	/usr/sbin/NetworkManager --no-daemon
+976.0 KiB + 334.5 KiB =   1.3 MiB	/usr/lib/polkit-1/polkitd --no-debug
+  1.2 MiB + 726.0 KiB =   2.0 MiB	-bash (2)
+  1.9 MiB +  88.5 KiB =   2.0 MiB	/usr/lib/systemd/systemd --switched-root --system --deserialize 22
+556.0 KiB +   2.4 MiB =   3.0 MiB	/usr/sbin/rsyslogd -n
+  2.0 MiB +   2.4 MiB =   4.4 MiB	/usr/lib/systemd/systemd-journald
+  4.4 MiB + 496.5 KiB =   4.8 MiB	sshd: root@pts/1    
+ 20.9 MiB + 407.0 KiB =  21.3 MiB	/usr/bin/python2 -Es /usr/sbin/firewalld --nofork --nopid
+ 57.6 MiB + 172.0 KiB =  57.7 MiB	/usr/bin/mongod -f /etc/mongod.conf
+697.8 MiB +   3.1 MiB = 700.9 MiB	/usr/bin/java -Xms1g -Xmx1g -XX:NewRatio=1 -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:-OmitStackTraceInFastThrow -XX:+UseParNewGC -jar -Dlog4j.configurationFile=file:///etc/graylog/server/log4j2.xml -Djava.library.path=/usr/share/graylog-server/lib/sigar -Dgraylog2.installation_source=rpm /usr/share/graylog-server/graylog.jar server -f /etc/graylog/server/server.conf -np
+795.3 MiB +   3.0 MiB = 798.3 MiB	/bin/java -Xms1g -Xmx1g -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Des.networkaddress.cache.ttl=60 -Des.networkaddress.cache.negative.ttl=10 -XX:+AlwaysPreTouch -Xss1m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djna.nosys=true -XX:-OmitStackTraceInFastThrow -Dio.netty.noUnsafe=true -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0 -Dlog4j.shutdownHookEnabled=false -Dlog4j2.disable.jmx=true -Djava.io.tmpdir=/tmp/elasticsearch-8175005901706508521 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/elasticsearch -XX:ErrorFile=/var/log/elasticsearch/hs_err_pid%p.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -XX:+PrintGCApplicationStoppedTime -Xloggc:/var/log/elasticsearch/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=32 -XX:GCLogFileSize=64m -Des.path.home=/usr/share/elasticsearch -Des.path.conf=/etc/elasticsearch -Des.distribution.flavor=default -Des.distribution.type=rpm -cp /usr/share/elasticsearch/lib/* org.elasticsearch.bootstrap.Elasticsearch -p /var/run/elasticsearch/elasticsearch.pid --quiet
+---------------------------------
+                          1.6 GiB
+=================================
+[root@centoslab01 server]# 
+
+
+[root@centoslab01 yum.repos.d]# yum install lynx
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * epel: mirror.math.princeton.edu
+No package lynx available.
+Error: Nothing to do
+[root@centoslab01 yum.repos.d]# 
+
+https://centos.pkgs.org/7/centos-x86_64/centos-indexhtml-7-9.el7.centos.noarch.rpm.html
+https://centos.pkgs.org/7/centos-x86_64/lynx-2.8.8-0.3.dev15.el7.x86_64.rpm.html
+
+----------------------------------------------------------------------------------------------
+
+[root@centoslab02 ~]# kh-mysql new-galera
+Forma de uso /usr/bin/kh-mysql [start|stop|status|restart|new-cluster]
+
+[root@centoslab02 ~]# kh-mysql new-cluster
+Running mysqld : root      3536  0.0  0.1 189720  2324 ?        S    10:48   0:00 su - mysql -c /sbin/mysqld --core-file --wsrep-new-cluster
+Mysqld already running
+0
+[root@centoslab02 ~]# lsof -i :9000
+[root@centoslab02 ~]# logout
+Connection to 192.168.12.108 closed.
+[cl@cl ~]$ ssh lab.centos01
+lsofLast login: Fri Dec 27 05:26:04 2019 from 192.168.12.19
+lsof [root@centoslab01 ~]# lsof -i :9000
+COMMAND  PID    USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+java    1184 graylog   37u  IPv6 8665786      0t0  TCP localhost:cslistener (LISTEN)
+[root@centoslab01 ~]# curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
+{
+  "cluster_name" : "graylog",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 12,
+  "active_shards" : 12,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
+}
+[root@centoslab01 ~]# vim /etc/graylog/server/server.conf 
+
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=9000/tcp --permanent
+Warning: ALREADY_ENABLED: 9000:tcp
+success
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=12900/tcp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=1514/tcp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --reload
+
+[root@centoslab01 ~]# setsebool httpd_can_network_connect 1
+setsebool:  SELinux is disabled.
+
+[root@centoslab01 ~]# yum install policycoreutils-python -y
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+epel/x86_64/metalink                                                                                                                                  |  53 kB  00:00:02     
+ * base: espejito.fder.edu.uy
+ * epel: mirror.math.princeton.edu
+ * extras: espejito.fder.edu.uy
+ * updates: espejito.fder.edu.uy
+
+[root@centoslab01 ~]# setenforce 1
+setenforce: SELinux is disabled
+[root@centoslab01 ~]# getenforce 
+Disabled
+[root@centoslab01 ~]# init 6
+packet_write_wait: Connection to UNKNOWN port 65535: Broken pipe
+[cl@cl ~]$ ssh lab.centos01
+Last login: Fri Dec 27 11:33:20 2019 from 192.168.12.19
+
+[root@centoslab01 ~]# getenforce 
+Enforcing
+
+[root@centoslab01 ~]# systemctl status graylog-server
+● graylog-server.service - Graylog server
+   Loaded: loaded (/usr/lib/systemd/system/graylog-server.service; enabled; vendor preset: disabled)
+   Active: active (running) since Fri 2019-12-27 11:50:58 -03; 1min 5s ago
+     Docs: http://docs.graylog.org/
+ Main PID: 1072 (graylog-server)
+   CGroup: /system.slice/graylog-server.service
+           ├─1072 /bin/sh /usr/share/graylog-server/bin/graylog-server
+           └─1397 /usr/bin/java -Xms1g -Xmx1g -XX:NewRatio=1 -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX...
+
+Dec 27 11:50:58 centoslab01.knowhow.com.uy systemd[1]: Started Graylog server.
+Dec 27 11:51:00 centoslab01.knowhow.com.uy graylog-server[1072]: OpenJDK 64-Bit Server VM warning: If the number of processors is expected to increase from one, t...hreads=N
+Hint: Some lines were ellipsized, use -l to show in full.
+
+[root@centoslab01 ~]# systemctl status elasticsearch
+● elasticsearch.service - Elasticsearch
+   Loaded: loaded (/usr/lib/systemd/system/elasticsearch.service; enabled; vendor preset: disabled)
+   Active: active (running) since Fri 2019-12-27 11:50:58 -03; 1min 10s ago
+     Docs: http://www.elastic.co
+ Main PID: 1071 (java)
+   CGroup: /system.slice/elasticsearch.service
+           ├─1071 /bin/java -Xms1g -Xmx1g -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -Des.networkaddress.cache.ttl=6...
+           └─1736 /usr/share/elasticsearch/modules/x-pack-ml/platform/linux-x86_64/bin/controller
+
+Dec 27 11:50:58 centoslab01.knowhow.com.uy systemd[1]: Started Elasticsearch.
+Dec 27 11:51:02 centoslab01.knowhow.com.uy elasticsearch[1071]: OpenJDK 64-Bit Server VM warning: If the number of processors is expected to increase from one, th...hreads=N
+Hint: Some lines were ellipsized, use -l to show in full.
+
+[root@centoslab01 ~]# curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
+curl: (7) Failed connect to localhost:9200; Connection refused
+
+[root@centoslab01 ~]# firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens160
+  sources: 
+  services: dhcpv6-client ssh
+  ports: 8080/tcp 9000/tcp 12900/tcp 1514/tcp
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+	
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=9200/tcp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --reload
+success
+[root@centoslab01 ~]# firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens160
+  sources: 
+  services: dhcpv6-client ssh
+  ports: 8080/tcp 9000/tcp 12900/tcp 1514/tcp 9200/tcp
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+	
+[root@centoslab01 ~]# curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'
+{
+  "cluster_name" : "graylog",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 12,
+  "active_shards" : 12,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
+}
+[root@centoslab01 ~]# setsebool -P httpd_can_network_connect 1
+[root@centoslab01 ~]# semanage port -a -t http_port_t -p tcp 9000
+ValueError: Port tcp/9000 already defined
+[root@centoslab01 ~]# semanage port -a -t http_port_t -p tcp 9200
+ValueError: Port tcp/9200 already defined
+[root@centoslab01 ~]# semanage port -a -t mongod_port_t -p tcp 27017
+
+[root@centoslab01 ~]# vi /etc/rsyslog.conf 
+[root@centoslab01 ~]# cat /etc/rsyslog.conf | grep -Ev ^\(#\|$\)
+$ModLoad imuxsock # provides support for local system logging (e.g. via logger command)
+$ModLoad imjournal # provides access to the systemd journal
+$ModLoad imudp
+$UDPServerRun 514
+$ModLoad imtcp
+$InputTCPServerRun 514
+$WorkDirectory /var/lib/rsyslog
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+$IncludeConfig /etc/rsyslog.d/*.conf
+$OmitLocalLogging on
+$IMJournalStateFile imjournal.state
+*.info;mail.none;authpriv.none;cron.none                /var/log/messages
+authpriv.*                                              /var/log/secure
+mail.*                                                  -/var/log/maillog
+cron.*                                                  /var/log/cron
+*.emerg                                                 :omusrmsg:*
+uucp,news.crit                                          /var/log/spooler
+local7.*                                                /var/log/boot.log
+*.* @127.0.0.1:5140
+
+
+[root@centoslab01 ~]# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens160: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:31:b3:67 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.12.107/24 brd 192.168.12.255 scope global noprefixroute ens160
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe31:b367/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@centoslab01 ~]# systemctl restart rsyslog
+
+[root@centoslab01 ~]# netstat -anup | grep 514
+udp        0      0 0.0.0.0:514             0.0.0.0:*                           2116/rsyslogd       
+udp6       0      0 127.0.0.1:5140          :::*                                1397/java           
+udp6       0      0 :::514                  :::*                                2116/rsyslogd       
+
+[root@centoslab01 ~]# logout
+Connection to 192.168.12.107 closed.
+[cl@cl ~]$ ssh lab.centos01 -L 9000:127.0.0.1:9000
+Last login: Fri Dec 27 11:51:50 2019 from 192.168.12.19
+[root@centoslab01 ~]# date
+Fri Dec 27 12:21:59 -03 2019
+	
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=5140/udp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=9200/udp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=12900/udp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --zone=public --add-port=9000/udp --permanent
+success
+[root@centoslab01 ~]# firewall-cmd --reload
+success
+[root@centoslab01 ~]# 
+

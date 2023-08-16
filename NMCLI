@@ -1,0 +1,75 @@
+###
+https://www.howtoforge.com/configure-network-interface-using-nmcli-on-centos-7/
+
+#Configure IPV4
+nmcli con mod ens192 ipv4.address 172.16.2.100/24
+
+#CONFIGURE GW
+nmcli con mod ens192 ipv4.gateway 172.16.255.250
+
+#CONFIGURE PROTO ( STATIC / MANUAL / DHCP )
+nmcli con mod ens192 ipv4.method manual
+
+#UP N RISE
+nmcli con up ens192 
+
+#
+nmcli -p device
+nmcli dev stat
+nmcli dev show p5p1
+nmcli device set p5p1 managed on
+nmcli connection show
+sudo nmcli con add type ethernet con-name KH ifname p5p1
+sudo nmcli con up KH
+
+###
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-configuring_ip_networking_with_nmcli
+
+# Add ipv4 route
+~]$  nmcli con edit ens3
+===| nmcli interactive connection editor |===
+
+Editing existing '802-3-ethernet' connection: 'ens3'
+
+Type 'help' or '?' for available commands.
+Type 'describe [<setting>.<prop>]' for detailed property description.
+
+You may edit the following settings: connection, 802-3-ethernet (ethernet), 802-1x, dcb, ipv4, ipv6, tc, proxy
+nmcli> set ipv4.routes 192.168.122.0/24 10.10.10.1
+nmcli> save persistent
+Connection 'ens3' (23f8b65a-8f3d-41a0-a525-e3bc93be83b8) successfully updated.
+nmcli> quit
+
+# Remove auto-routes
+[cl@cl KB]$ sudo nmcli c mod HG_clorenzo_2022 ipv4.ignore-auto-routes no
+
+# VPNs
+
+[cl@cl KB]$ sudo grep pass /etc/NetworkManager/system-connections/pfsensep-UDP4-1194-clorenzo-config-2022-904701fb-36a7-406f-8c5a-c85d3658caca.nmconnection 
+cert-pass-flags=0
+connection-type=password-tls
+password-flags=1
+cert-pass=WYrHfYpE5zpmsTg33zgfhoWg
+[cl@cl KB]$ 
+
+[cl@cl KB]$ sudo nmcli c m HG_clorenzo_2022 vpn.user-name clorenzo
+
+[cl@cl bin]$ sudo nmcli c s HG_clorenzo_2022 |grep vpn
+connection.type:                        vpn
+vpn.service-type:                       org.freedesktop.NetworkManager.openvpn
+vpn.user-name:                          clorenzo
+vpn.data:                               auth = SHA256, ca = /home/cl/.cert/nm-openvpn/pfsensep-UDP4-1194-clorenzo-config-2022-ca.pem, cert = /home/cl/.cert/nm-openvpn/pfsensep-UDP4-1194-clorenzo-config-2022-cert.pem, cert-pass-flags = 0, connection-type = password-tls, dev = HG, dev-type = tun, key = /home/cl/.cert/nm-openvpn/pfsensep-UDP4-1194-clorenzo-config-2022-key.pem, password-flags = 1, remote = 201.217.136.203:1194:udp4, remote-cert-tls = server, ta = /home/cl/.cert/nm-openvpn/pfsensep-UDP4-1194-clorenzo-config-2022-tls-auth.pem, ta-dir = 1, username = clorenzo, verify-x509-name = name:openvpn
+vpn.secrets:                            <hidden>
+vpn.persistent:                         no
+vpn.timeout:                            0
+[cl@cl bin]$ 
+
+[cl@cl bin]$ nmcli con up HG_clorenzo_2022 --ask
+A password is required.
+Password (vpn.secrets.password): ••••••••••••••••••••••••
+
+[cl@cl bin]$ sh VPN_HG.sh
+You need to authenticate to access the Virtual Private Network “HG_clorenzo_2022”.
+Password (vpn.secrets.password): ••••••••••••••••••••••••
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/19)
+[cl@cl bin]$ 

@@ -1,0 +1,135 @@
+#RED HAT ANSIBLE AUTOMATION
+
+ansible.com/get-started
+
+PLAYBOOK YAML
+
+Playbooks contains PLAYS
+PLAYS contains TASKS
+TASKS all MODULES
+
+TASKS run SEQUENTLIALLY
+
+HANDLERS are trigerred by TASKS, run once at the and of PLAYS.
+
+https://docs.ansible.com/ansible/latest/modules/list_of_all_modules.html
+----------------------------------------------------
+
+ROLES kind of PLAYBOOK fully self-contained. 
+
+----------------------------------------------------
+
+RUNNING ANSIBLE
+
+----------------------------------------------------
+
+AD-HOC: ansible <inventory> <options>
+
+ansible
+	-m <MODULE>
+	-b <BECOME USER> [Default = root]
+	-i <INVENTORY FILE>
+	-a <ARGUEMENTS>
+	-f <FOKS>	[ Default =5 ]
+	-B <TIMEOUT>	[ In seconds ]
+	-P <POLLLING>	[ INterval of seconds ]
+	--tree [$DATA_DIR] <REDIRECT>
+	-C <CHECK>
+
+ansible web -m ping
+ansible web -m yum -a "name=openssl state=latest"
+
+ansible web <REMOTE_COMMAND> <COMMAND>
+ansible web -a /bin/date
+
+----------------------------------------------------
+####    MODULES    #####
+
+https://docs.ansible.com/ansible/latest/modules/list_of_all_modules.html
+
+#MODULE INFORMATION
+ansible-doc -s [module]
+
+[MODULE] [KEYS] [ARGS]
+
+<yum>
+name : [package name]
+state : absent, installed, latest, present, removed [ action ]
+
+<apt>
+name : [package name]
+state : absent, installed, latest, present, removed [ action ]
+
+<package>	#Will detect automaticlly and select package manager
+args : allow_downgrade, autoremove, bugfix, conf_file, disable_excludes, disable_gpg_check, disable_plugin, disablerepo, download_dir, download_only, enable_plugin, enablerepo, exclude, install_repoquery, install_weak_deps, installroot, list, lock_timeout, name, releasever, security, skip_broken, state, update_cache, update_only, use_backend, validate_certs
+
+<service>
+args : daemon_reexec, daemon_reload, enabled, force, masked, name, no_block, scope, state, user
+
+	name = httpd
+	state = started
+	enabled = yes
+
+
+<ping>
+
+<command>	#Default command
+touch
+args : creates, removes
+
+<shell>		#Similar a "command" Interpreta redirecciones , etc
+
+<file>
+args : _diff_peek, _original_basename, access_time, access_time_format, attributes, backup, content, delimiter, directory_mode, follow, force, group, mode, modification_time, modification_time_format, owner, path, recurse, regexp, remote_src, selevel, serole, setype, seuser, src, state, unsafe_writes
+
+<copy>
+args :
+	src =
+	dest =
+
+<lineinfile>
+	path = /etc/selinux/config
+	regexp = '^SELINUX='
+	line = SELINUX=enforcing
+	
+	state = absent
+
+	insertafter = '^#SELINUX'	[RegExp]
+	insertbefore = 'SELINUX'	[Pattern]
+	
+	create = yes	#Add line to the file
+
+args : owner, group, mode,...
+
+<archive> / <unarchive>
+args : attributes, backup, content, delimiter, dest, directory_mode, exclude_path, follow, force, force_archive, format, group, mode, owner, path, regexp, remote_src, remove, selevel, serole, setype, seuser, src, unsafe_writes"
+
+	path = - /path/to/foo
+	       - /path/for/new
+	exclude_path = - /path/to/foo/2
+	dest = /tmp/file.tar.gz
+	format = gz
+
+<get_url>
+args : attributes, backup, checksum, client_cert, client_key, content, delimiter, dest, directory_mode, follow, force, force_basic_auth, group, headers, http_agent, mode, owner, regexp, remote_src, selevel, serole, setype, seuser, sha256sum, src, timeout, tmp_dest, unsafe_writes, url, url_password, url_username, use_proxy, validate_certs
+
+<user>
+args : append, authorization, comment, create_home, expires, force, generate_ssh_key, group, groups, hidden, home, local, login_class, move_home, name, non_unique, password, password_lock, profile, remove, role, seuser, shell, skeleton, ssh_key_bits, ssh_key_comment, ssh_key_file, ssh_key_passphrase, ssh_key_type, state, system, uid, update_password
+
+<group>
+args : gid, local, name, non_unique, state, system
+
+----------------------------------------------------
+####    SYSTEM INFORMATION      ####
+{{ ansible_facts }}
+
+<setup>		#Brings lot of system information
+	filter=*reg_exp*
+
+ansible web -m setup --tree $DATA_DIR
+
+
+# MULTIPLE HOSTS TARGET
+# https://www.digitalocean.com/community/cheatsheets/how-to-manage-multiple-servers-with-ansible-ad-hoc-commands
+
+ansible -m shell -a 'ps -fu mysql' -i /opt/ansible/inventories/hosts prod.antel.lezama.tuappweb.mysql.db02:prod.antel.lezama.tuappweb.mysql.db03:prod.antel.lezama.tuappweb.mysql.db04

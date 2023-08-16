@@ -1,0 +1,28 @@
+# Version identify
+
+# GEOCOM
+[root@opp-prod-app01 webapps]# grep -r 'version' */META-INF/MANIFEST.MF* | sort -k2
+flonumeros/META-INF/MANIFEST.MF:version: 04.01.001g
+sorpersonas/META-INF/MANIFEST.MF:version: 04.01.007k
+cerpersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+durpersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+flopersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+salpersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+tacpersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+tytpersonas/META-INF/MANIFEST.MF:version: 04.01.007l
+cergeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+durgeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+flogeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+salgeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+sorgeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+tacgeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+tytgeosso/META-INF/MANIFEST.MF:version: 04.01.008c
+certributos/META-INF/MANIFEST.MF:version: 04.01.038l
+durtributos/META-INF/MANIFEST.MF:version: 04.01.038l
+flotributos/META-INF/MANIFEST.MF:version: 04.01.038l
+saltributos/META-INF/MANIFEST.MF:version: 04.01.038l
+tactributos/META-INF/MANIFEST.MF:version: 04.01.038l
+tyttributos/META-INF/MANIFEST.MF:version: 04.01.038l
+
+#INSIS
+

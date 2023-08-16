@@ -1,0 +1,42 @@
+#INSTALACION / CONFIF FILEBEAT
+#PARA USAR CONTRA KIBANA
+
+cd /opt
+
+mv -f /etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml.bkp
+yum remove -y filebeat
+
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.5.0-x86_64.rpm
+rpm -vi filebeat-7.5.0-x86_64.rpm
+
+cat <<EOF > /etc/filebeat/filebeat.yml
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/mysql/SlowQueries.log
+    - /var/log/mysqld.log
+
+setup.template.name: "filebeat-"
+setup.template.pattern: "filebeat-*"
+
+output.elasticsearch:
+  hosts: ["192.168.200.1:9200"]
+  index: "filebeat-%{+yyyy.MM.dd}"
+EOF
+
+echo 'exit' | telnet 192.168.200.1 9200
+
+systemctl status filebeat
+systemctl enable filebeat
+systemctl start filebeat
+
+---------------------------------------------
+#Habilitar modulos
+#vim /etc/filebeat/filebeat.yml
+
+filebeat.config.modules:
+  enabled: true
+  path: /etc/filebeat/modules.d/*.yml
+
+filebeat modules enable postfix

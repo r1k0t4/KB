@@ -1,0 +1,22 @@
+TORRE:
+Vlan: 4145
+mount | grep -q /mnt/veeam || mount -t nfs 10.240.45.10:/HG-Logs /mnt/veeam -O user=LogsHG,pass=20HGlogs20
+## v3
+mount | grep -q /mnt/veeam || sudo mount -v -t nfs -o nolock,posix,nfsvers=3 10.240.45.10:/HG-Logs /mnt/veeam -O user=LogsHG,pass=20HGlogs20
+
+PANDO:
+Vlan: 45
+mount | grep -q /mnt/veeam || mount -t nfs 10.242.45.10:/HG-Logs /mnt/veeam -O user=LogsHG,pass=20HGlogs20
+## v3
+mount | grep -q /mnt/veeam || sudo mount -v -t nfs -o nolock,posix,nfsvers=3 10.242.45.10:/HG-Logs /mnt/veeam -O user=LogsHG,pass=20HGlogs20
+
+#Rsync FILES
+~/Documents/Scripts/moveRsyncFiles_NFS.sh
+
+#Ansible: moveRsyncFiles_NFS
+5 0,2,4,6,8,10,12,14,16,18,20,22 * * * . /home/mysql/.bash_profile; /home/mysql/khbckp/scripts/moveRsyncFiles_NFS.sh /home/mysql/khbckp/conf/moveRsyncFiles_bin-logs_NFS.conf >> /home/mysql/khbckp/logs/moveRsyncFiles_NFS.cron.log 2>> /home/mysql/khbckp/logs/moveRsyncFiles_NFS.cron.err
+
+#TROUBLESHOOTING
+watch -d 'ps -eo pid,lstart,etime,cmd | grep -Ei "rsync|chown|chmod"|grep -v grep'
+
+tail -f /home/mysql/khbckp/logs/moveRsyncFiles_bin-logs_NFS.log

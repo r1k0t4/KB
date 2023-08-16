@@ -1,0 +1,14 @@
+#SORT HA PROXY LOG FILE, ASCENDING IN RESPONSE TIMES
+
+awk '{ print $1 " " $2 " " $3 " " $12 " " $13 " " $17 " " $22 }' flores_17a19.log | head | sort -t "/" -nk 5
+
+Jul 29 17:00:14 158/0/1/2/162 200 --VN /flrgci/PublicTempStorage/logoidf_trans14807997.png
+Jul 29 17:00:15 79/0/0/166/245 200 --VN /flrgci/servlet/com.gci.gc.hwbcontrn01?56a44d6dd9b2f88827219672a1fdd363,1dVErd_spQs1Eee0x2q1vSvQHBGxmqMT4raV17rB3NQ=,gx-no-cache=1627588836205
+Jul 29 17:00:16 940/0/2/87/1029 200 --VN /flrgci/servlet/com.gci.gc.hprcax02?1,CC,,MD,,gxPopupLevel%3D0%3B
+Jul 29 17:00:14 87/0/1/977/1065 200 --VN /flrgci/servlet/com.gci.pxtools.apis.hwbwkw01?c352d6ced8678810e924c1af2eccdb23,gx-no-cache=1627588809047
+Jul 29 17:00:06 1451/0/0/11/1462 200 --VN /flrgci/servlet/com.gci.pxtools.controlpreferences.acontrolpreferencessavestate?jz8LGWvzMdtNaCbzm+YdWIk4ohck08ABb1XKP4bfop0WujkDJSdRlJ2UYnAtzxsgLs_Vl7dYht7BrGK6CccnuUvDeF3MXLzZQez5x46g5VRfMJ+let8GxHWVStVLdtY4LebTJWIMWmqo_DwwPWViTg==
+Jul 29 17:00:14 1518/0/0/12/1530 200 --VN /flrgci/servlet/com.gci.gc.hwbcontrn01?210c975a13520e43adfbf6e4626a4bb82d380f42dcbe62f03ffa586e5cb4b9cb8dc07f601a23813edb4f9861edcd5620a936e21d372980bd2f971f66252a54556864de5e760ddc910c5bf5f62ce5b8178906812ce994bd1aa2696aaac0dca9adbdee56d082084f837e792c809ab5f6ce23adfcee22c24f56335615a73f69fe63b29f2d29d032d3e5569d7341cc4f092695b8aba03b24c5a61d81a3cb0c60b1066e39e72aa92b08a933ab8deb3ef1fec0f7420946e27dc6dfcb1088a211079e348dc07f601a23813edb4f9861edcd5620a936e21d372980bd2f971f66252a54550b51b4411dc0e83bf13d199375107363e92151b0dbc43d1762f6651541d637a58ddc55f28943c306c8a56f4e867abae934ece9ae0e937bce042256fe98e6663e68ad2f5f75cfca7ad4647438d18ee5b6,gx-no-cache=1627588836169
+Jul 29 17:00:13 2002/0/2/141/2145 200 --VN /flrgci/servlet/com.gci.pxtools.apis.hwbwkw01?c352d6ced8678810e924c1af2eccdb23,gx-no-cache=1627588808785
+Jul 29 17:00:09 2102/0/1/106/2209 200 --VN /flrgci/servlet/com.gci.gc.hprcax02?56a44d6dd9b2f88827219672a1fdd363,,CC,,MD,,gxPopupLevel%3D0%3B,gx-no-cache=1627588830747
+Jul 29 17:00:05 2292/0/1/53/2346 200 --VN /flrgci/servlet/com.gci.gc.hprcax02?,CC,,MD,,gxPopupLevel%3D0%3B
+Jul 29 17:00:13 3697/0/0/24/3721 200 --VN /flrgci/servlet/com.gci.gc.hprcax02?56a44d6dd9b2f88827219672a1fdd363,,CC,,MD,,gxPopupLevel%3D0%3B,gx-no-cache=1627588834226

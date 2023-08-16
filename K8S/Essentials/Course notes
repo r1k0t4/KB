@@ -1,0 +1,529 @@
+###############################################################
+K8S
+###############################################################
+Container orchestration
+###############################################################
+
+cloud_user / piriz2400
+
+###############################################################
+
+14:00
+Inicio config en ubuntu
+15:30
+
+16:00
+
+#########################################################
+                      POD MANAGING
+#########################################################
+
+[cloud_user@cladmin1c ~]$ kubectl get pods
+No resources found in default namespace.
+
+[cloud_user@cladmin1c ~]$ cat << EOF | kubectl create -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+EOF
+
+[cloud_user@cladmin1c ~]$ kubectl get pods
+NAME    READY   STATUS              RESTARTS   AGE
+nginx   0/1     ContainerCreating   0          16s
+
+[cloud_user@cladmin1c ~]$ kubectl describe pod nginx
+Name:         nginx
+Namespace:    default
+Priority:     0
+Node:         cladmin2c.mylabserver.com/172.31.30.224
+Start Time:   Sat, 26 Sep 2020 19:17:28 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           10.244.2.2
+IPs:
+  IP:  10.244.2.2
+Containers:
+  nginx:
+    Container ID:   docker://eccc65a192b7bc8bd7a1ecffc6391aca01fc6fe462b3b1df9a630fda7441c37a
+    Image:          nginx
+    Image ID:       docker-pullable://nginx@sha256:c628b67d21744fce822d22fdcc0389f6bd763daac23a6b77147d0712ea7102d0
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Sat, 26 Sep 2020 19:17:45 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-gnngb (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-gnngb:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-gnngb
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  30s   default-scheduler  Successfully assigned default/nginx to cladmin2c.mylabserver.com
+  Normal  Pulling    27s   kubelet            Pulling image "nginx"
+  Normal  Pulled     22s   kubelet            Successfully pulled image "nginx" in 5.03451672s
+  Normal  Created    11s   kubelet            Created container nginx
+  Normal  Started    11s   kubelet            Started container nginx
+[cloud_user@cladmin1c ~]$
+
+[cloud_user@cladmin1c ~]$ kubectl delete pod nginx
+pod "nginx" deleted
+
+
+#########################################################
+                       NODES
+#########################################################
+
+[cloud_user@cladmin1c ~]$ kubectl get nodes 
+NAME                        STATUS   ROLES    AGE   VERSION
+cladmin1c.mylabserver.com   Ready    master   71m   v1.19.2
+cladmin2c.mylabserver.com   Ready    <none>   64m   v1.19.2
+cladmin3c.mylabserver.com   Ready    <none>   65m   v1.19.2
+
+[cloud_user@cladmin1c ~]$ kubectl describe node cladmin2c.mylabserver.com
+Name:               cladmin2c.mylabserver.com
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=cladmin2c.mylabserver.com
+                    kubernetes.io/os=linux
+Annotations:        flannel.alpha.coreos.com/backend-data: {"VtepMAC":"2a:e1:6a:b4:e2:d8"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.31.30.224
+                    kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sat, 26 Sep 2020 18:20:43 +0000
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  cladmin2c.mylabserver.com
+  AcquireTime:     <unset>
+  RenewTime:       Sat, 26 Sep 2020 19:25:15 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Sat, 26 Sep 2020 18:23:27 +0000   Sat, 26 Sep 2020 18:23:27 +0000   FlannelIsUp                  Flannel is running on this node
+  MemoryPressure       False   Sat, 26 Sep 2020 19:23:08 +0000   Sat, 26 Sep 2020 18:20:44 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Sat, 26 Sep 2020 19:23:08 +0000   Sat, 26 Sep 2020 18:20:44 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Sat, 26 Sep 2020 19:23:08 +0000   Sat, 26 Sep 2020 18:20:44 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Sat, 26 Sep 2020 19:23:08 +0000   Sat, 26 Sep 2020 18:23:36 +0000   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  172.31.30.224
+  Hostname:    cladmin2c.mylabserver.com
+Capacity:
+  cpu:                2
+  ephemeral-storage:  10473452Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3819844Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  9652333348
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3717444Ki
+  pods:               110
+System Info:
+  Machine ID:                 ec21cb10b0ad74450cc237a2671b76d8
+  System UUID:                ec27e375-adf7-d479-9f0b-7d1f33a9f9d7
+  Boot ID:                    0e98cdad-f37c-4f2e-a991-9e8a36e1e5e9
+  Kernel Version:             4.18.0-193.14.2.el8_2.x86_64
+  OS Image:                   CentOS Linux 8 (Core)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.13
+  Kubelet Version:            v1.19.2
+  Kube-Proxy Version:         v1.19.2
+PodCIDR:                      10.244.2.0/24
+PodCIDRs:                     10.244.2.0/24
+Non-terminated Pods:          (2 in total)
+  Namespace                   Name                     CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                     ------------  ----------  ---------------  -------------  ---
+  kube-system                 kube-flannel-ds-zh442    100m (5%)     100m (5%)   50Mi (1%)        50Mi (1%)      62m
+  kube-system                 kube-proxy-xlfln         0 (0%)        0 (0%)      0 (0%)           0 (0%)         64m
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                100m (5%)  100m (5%)
+  memory             50Mi (1%)  50Mi (1%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+Events:              <none>
+[cloud_user@cladmin1c ~]$ 
+
+#########################################################
+                       NETWORKING
+#########################################################
+
+FLANNEL ( OR ELSE... ) ITS A PLUGIN THAT ALLOWS COMMUNICATION BETWEEN PODS ON K8S.
+
+>>Create a deployment with two nginx pods:
+
+[cloud_user@cladmin1c ~]$ cat << EOF | kubectl create -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+    - name: nginx
+        image: nginx:1.15.4
+        ports:
+        - containerPort: 80
+EOF
+deployment.apps/nginx created
+
+>> Create a busybox pod to use for testing:
+
+[cloud_user@cladmin1c ~]$ cat << EOF | kubectl create -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  containers:
+  - name: busybox
+    image: radial/busyboxplus:curl
+    args:
+    - sleep
+    - "1000"
+EOF
+pod/busybox created
+
+>> Get pod information
+
+[cloud_user@cladmin1c ~]$ kubectl get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE                        NOMINATED NODE   READINESS GATES
+busybox                  1/1     Running   0          40s     10.244.2.5   cladmin2c.mylabserver.com   <none>           <none>
+nginx-746ccc65d8-hr9xk   1/1     Running   0          4m12s   10.244.1.4   cladmin3c.mylabserver.com   <none>           <none>
+nginx-746ccc65d8-rvhh5   1/1     Running   0          4m12s   10.244.2.4   cladmin2c.mylabserver.com   <none>           <none>
+[cloud_user@cladmin1c ~]$ 
+
+>> Test BUSYBOX and network
+[cloud_user@cladmin1c ~]$ kubectl exec busybox -- curl 10.244.2.4
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   612  100   612    0     0   196k      0 --:--:-- --:--:-- --:--:--  298k
+[cloud_user@cladmin1c ~]$ 
+
+
+#########################################################
+              K8S ARCHITECTURE & COMPONENTS
+#########################################################
+
+>> Get a list of system pods running in the cluster:
+
+[cloud_user@cladmin1c ~]$ kubectl get pods -n kube-system
+NAME                                                READY   STATUS    RESTARTS   AGE
+coredns-f9fd979d6-ndzkh                             1/1     Running   0          83m
+coredns-f9fd979d6-x866n                             1/1     Running   0          83m
+etcd-cladmin1c.mylabserver.com                      1/1     Running   0          83m
+kube-apiserver-cladmin1c.mylabserver.com            1/1     Running   0          83m
+kube-controller-manager-cladmin1c.mylabserver.com   1/1     Running   0          83m
+kube-flannel-ds-pm45t                               1/1     Running   0          73m
+kube-flannel-ds-zbxf4                               1/1     Running   0          73m
+kube-flannel-ds-zh442                               1/1     Running   0          73m
+kube-proxy-hhlld                                    1/1     Running   0          83m
+kube-proxy-rkq52                                    1/1     Running   0          76m
+kube-proxy-xlfln                                    1/1     Running   0          76m
+kube-scheduler-cladmin1c.mylabserver.com            1/1     Running   0          83m
+
+### #### K8S COMPONENTS ### ####
+
+### CONTROL PLANE ###
+
+etcd >> Distribued syncronizaed data storage for cluster stage.
+        Datastore for Master & Worker in which states about pods, nodes, and data in the cluster, its saved & synced.
+
+kube-apiserver >> Servers K8S API, simple rest based API. kubectl communicates with it.
+
+kube-controller-manager >> backend for kube-apiserver  ( as an API frontend ).
+
+kube-scheduler >> Determine when and where to run a pod. If you are creating and destroying pods, scheduler is handling it.
+
+### CONTROL PLANE ###
+
+### NODES ###
+
+kubelet >> Agent that runs on each node. Acts as a middleware between k8s api and container runtime ( docker ) on heach node.
+        Control plane acts with this agent.
+        Is not in pod list because kubelet is what RUNS the pod, so itself is running as a service [!]
+
+        >> Check the status of the kubelet service:
+                [cloud_user@cladmin1c ~]$ sudo systemctl status kubelet
+                [sudo] password for cloud_user: 
+                ● kubelet.service - kubelet: The Kubernetes Node Agent
+                   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; disabled; vendor preset: disabled)
+                  Drop-In: /usr/lib/systemd/system/kubelet.service.d
+                           └─10-kubeadm.conf
+                   Active: active (running) since Sat 2020-09-26 18:13:27 UTC; 1h 23min ago
+                     Docs: https://kubernetes.io/docs/
+                 Main PID: 38283 (kubelet)
+                    Tasks: 15 (limit: 23235)
+                   Memory: 44.9M
+                   CGroup: /system.slice/kubelet.service
+                           └─38283 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib>
+
+                Sep 26 18:23:15 cladmin1c.mylabserver.com kubelet[38283]: W0926 18:23:15.452872   38283 pod_container_deletor.go:79] Container "9f9a7d450af89b16768aa1a94dbaa>
+                Sep 26 18:23:19 cladmin1c.mylabserver.com kubelet[38283]: E0926 18:23:19.753343   38283 kubelet.go:2103] Container runtime network not ready: NetworkReady=fa>
+                Sep 26 18:23:20 cladmin1c.mylabserver.com kubelet[38283]: W0926 18:23:20.452909   38283 cni.go:239] Unable to update cni config: no networks found in /etc/cn>
+                Sep 26 18:23:25 cladmin1c.mylabserver.com kubelet[38283]: E0926 18:23:25.058745   38283 kubelet.go:2103] Container runtime network not ready: NetworkReady=fa>
+                Sep 26 18:23:25 cladmin1c.mylabserver.com kubelet[38283]: W0926 18:23:25.453525   38283 cni.go:239] Unable to update cni config: no networks found in /etc/cn>
+                Sep 26 18:23:30 cladmin1c.mylabserver.com kubelet[38283]: E0926 18:23:30.155581   38283 kubelet.go:2103] Container runtime network not ready: NetworkReady=fa>
+                Sep 26 18:23:30 cladmin1c.mylabserver.com kubelet[38283]: W0926 18:23:30.454334   38283 cni.go:239] Unable to update cni config: no networks found in /etc/cn>
+                Sep 26 18:23:35 cladmin1c.mylabserver.com kubelet[38283]: E0926 18:23:35.347247   38283 kubelet.go:2103] Container runtime network not ready: NetworkReady=fa>
+                Sep 26 18:23:35 cladmin1c.mylabserver.com kubelet[38283]: W0926 18:23:35.548022   38283 cni.go:239] Unable to update cni config: no networks found in /etc/cn>
+                Sep 26 18:23:40 cladmin1c.mylabserver.com kubelet[38283]: E0926 18:23:40.356939   38283 kubelet.go:2103] Container runtime network not ready: NetworkReady=fa>
+                [cloud_user@cladmin1c ~]$ 
+
+kube-proxy >>   There are three of them, because its one running on each node.
+                It handles network communications between each node, leaving in place heach component of this virtual infrastructure.
+                From POD perspective, this handles network communications writing FW rules to the routing tables of each node to allow all traffic, to be routed appropiatly.
+
+### NODES ###
+
+### #### K8S COMPONENTS ### ####
+
+17:00
+
+#########################################################
+                       DEPLOYMENTS
+#########################################################
+
+Pods desired STATE definition. It organize and manage multiple containers.
+Pods orchestation, self-healing, scalability, replicas, rolling updates
+
+>> Create a deployment:
+
+[cloud_user@cladmin1c ~]$ cat <<EOF | kubectl create -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.15.4
+        ports:
+        - containerPort: 80
+EOF
+
+
+>> Get a list of deployments:
+
+[cloud_user@cladmin1c ~]$ kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   2/2     2            2           4m14s
+
+>> Get more information about a deployment:
+
+[cloud_user@cladmin1c ~]$ kubectl describe deployment nginx-deployment
+Name:                   nginx-deployment
+Namespace:              default
+CreationTimestamp:      Sat, 26 Sep 2020 19:53:09 +0000
+Labels:                 app=nginx
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=nginx
+Replicas:               2 desired | 2 updated | 2 total | 2 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=nginx
+  Containers:
+   nginx:
+    Image:        nginx:1.15.4
+    Port:         80/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   nginx-deployment-746ccc65d8 (2/2 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  5m34s  deployment-controller  Scaled up replica set nginx-deployment-746ccc65d8 to 2
+
+
+>> Get a list of pods:
+
+[cloud_user@cladmin1c ~]$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-746ccc65d8-ksx86   1/1     Running   0          5m54s
+nginx-deployment-746ccc65d8-wf46s   1/1     Running   0          5m54s
+[cloud_user@cladmin1c ~]$ 
+
+>> Check deployment heath control
+
+[cloud_user@cladmin1c ~]$ kubectl delete pod nginx-deployment-746ccc65d8-5mp5c
+pod "nginx-deployment-746ccc65d8-5mp5c" deleted
+
+[cloud_user@cladmin1c ~]$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-746ccc65d8-6mwbh   1/1     Running   0          5s
+nginx-deployment-746ccc65d8-wdxb8   1/1     Running   0          19s
+
+>> Remove deployments
+
+[cloud_user@cladmin1c ~]$ kubectl delete deployment nginx-deployment
+deployment.apps "nginx-deployment" deleted
+[cloud_user@cladmin1c ~]$ 
+
+
+#########################################################
+                          SERVICES
+#########################################################
+
+Allow to acces dynamically a group of replica pods.
+So, in nginx case, how do an app acces nginx web server you can constantly transform pods ?
+Provides load balance usag of a dinamic list of pods.
+So think as a service as an abstraction layer above ReplicaPods depoyments.
+
+>> Create a NodePort service on top of your nginx pods:
+
+[cloud_user@cladmin1c ~]$ cat << EOF | kubectl create -f -
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+  type: NodePort
+EOF
+
+Be aware of selector!
+Must be pointing to previous deployment label $( kubectl describe ${POD_NAME} | grep Label ) !
+
+>> Get a list of services in the cluster.
+
+[cloud_user@cladmin1c ~]$ kubectl get svc 
+or
+[cloud_user@cladmin1c ~]$ kubectl get service
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes      ClusterIP   10.96.0.1       <none>        443/TCP        115m
+nginx-service   NodePort    10.97.107.189   <none>        80:30080/TCP   34s
+
+>> Since this is a NodePort service, you should be able to access it using port 30080 on any of your cluster's servers. You can test this with the command:
+
+[cloud_user@cladmin1c ~]$ curl localhost:30080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+
+#########################################################
+                     MICROSERVICIOS
+#########################################################
+
+
+https://upcloud.com/community/tutorials/install-kubernetes-cluster-centos-8/
+
+#INITIALIZE !
+kubeadm reset && rm -rf /etc/cni/net.d

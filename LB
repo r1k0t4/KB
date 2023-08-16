@@ -1,0 +1,29 @@
+frontend lstnr_florida
+    bind :3307
+    use_backend db_florida
+   
+backend db_florida
+    default-server maxconn 300
+    server db01 192.168.50.11:3306 check
+    server db02 192.168.50.12:3306 check backup
+    server db03 192.168.50.13:3306 check backup
+   
+frontend lstnr_durazno
+    bind :3308
+    use_backend db_durazno
+   
+backend db_durazno
+    default-server maxconn 300
+    server db02 192.168.50.12:3306 check
+    server db01 192.168.50.11:3306 check backup
+    server db03 192.168.50.13:3306 check backup
+   
+frontend lstnr_maldonado
+    bind :3309
+    use_backend db_maldonado
+   
+backend db_maldonado
+    default-server maxconn 300
+    server db03 192.168.50.13:3306 check
+    server db01 192.168.50.11:3306 check backup
+    server db02 192.168.50.12:3306 check backup

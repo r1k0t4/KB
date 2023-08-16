@@ -1,0 +1,24 @@
+#Config
+[root@db01.epagos.prod.mgmt.odc.antel.com.uy ~]# vim /opt/tivoli/tsm/client/ba/bin/dsm.sys
+
+#Connection (1)
+[root@db01.epagos.prod.mgmt.odc.antel.com.uy ~]# dsmc
+
+#Connection (2)
+[root@db01.epagos.prod.mgmt.odc.antel.com.uy ~]# dsmc -se=TSM2-db01.epagos.prod.mgmt.odc.antel.com.uy-DIA
+IBM Tivoli Storage Manager
+Command Line Backup-Archive Client Interface
+  Client Version 7, Release 1, Level 6.0 
+  Client date/time: 04/16/2020 17:32:11
+(c) Copyright by IBM Corporation and other(s) 1990, 2016. All Rights Reserved. 
+
+Node Name: TSM2-DB01.EPAGOS.PROD.MGMT.ODC.ANTEL.COM.UY-DIA
+Session established with server TSM2_SERVER1: Windows
+  Server Version 7, Release 1, Level 7.200
+  Data compression forced on by the server
+  Server date/time: 04/16/2020 17:32:11  Last access: 10/09/2019 18:01:16
+
+tsm> 
+
+#Test on SRV (-se)
+[root@db01.epagos.prod.mgmt.odc.antel.com.uy ~]# dsmc inc /root/nrpe-3.2.0-6.el7.x86_64.rpm -se=HG-TSM-db01.epagos.prod.mgmt.odc.antel.com.uy-dia

@@ -1,0 +1,24 @@
+sudo yum install ffmpeg ffmpeg-devel
+#ffmpeg -framerate 25 -i image-%05d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
+#ffmpeg -framerate 25 -i IMG%d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 -i IMG%d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 -i IMG*.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 -i IMG_20210913_%d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 25 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+#ffmpeg -framerate 25 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+man ffmpeg
+ffmpeg -framerate 1 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 0,5 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 0.5 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 1 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 1 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 0,5 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 0.5 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+ffmpeg -framerate 0.5 -pattern_type glob -i '*.jpg' -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p fatbar.mp4
+history |grp ffmp
+ 9971  history |gerp ffmp
+
+[cl@cl Webcam]$ ffmpeg -i 2021-12-03-142831.webm -strict experimental video.mp4
+

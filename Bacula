@@ -1,0 +1,61 @@
+# Config
+/etc/bacula/bacula-fd.conf
+
+#Use
+systemctl start/status/stop bacula-fd
+/opt/bacula/scripts/bacula stop/status/start
+
+# Poner el nombre del bacula directory que eso depende del bacula al que te conectas al igual que la passwd que tambien depende del bacula contra el que queres respaldar
+
+# xyz-dir
+Director {
+  Name = bkp04.stpva.prod.vpc.sva.antel.com.uy-dir
+  Password = PHguRUlYYBuFlPfxAMsnxFH86fjYD0f2j+1R52/aMAPI #HAIUAq7GNA1E8ELSci4vMACVQCTFsOlsdxi4n6dIBUTN
+}
+
+# xyz-mon
+Director {
+  Name = bkp04.stpva.prod.vpc.sva.antel.com.uy-mon
+  Password = PHguRUlYYBuFlPfxAMsnxFH86fjYD0f2j+1R52/aMAPI #HAIUAq7GNA1E8ELSci4vMACVQCTFsOlsdxi4n6dIBUTN
+  Monitor = yes
+}
+
+# xyz-fd
+FileDaemon {                          # this is me
+  Name = db03.tickantel.prod-fd
+  FDport = 9102                  # where we listen for the director
+  WorkingDirectory = /var/spool/bacula
+  Pid Directory = /var/run
+  Maximum Concurrent Jobs = 2
+}
+
+# Ports
+SERVER > 9102 > CLIENT
+CLIENT > 9103 > SERVER
+CLIENT > 9101 > SERVER
+
+# Console
+/opt/bacula/bin/bconsole
+
+
+
+
+Messages {
+  Name = Standard
+  director = bkp04.stpva.prod.vpc.sva.antel.com.uy-dir = all, !skipped, !restored #bkp03.stpva.prod.vpc.sva.antel.com.uy-dir = all, !skipped, !restored
+}
+
+
+#CREDENCIALES
+
+backups02.ges.vera.pa
+
+  Name = backups02.ges.vera.pa-dir
+  Password = "/Wm7CtC4KxJ2YbC5gg1oOTsNYEZMd1TIIOy591R8Khed" 
+  Name = backups02.ges.vera.pa-mon
+  Password = "m1cb2vMwb5A+xHM+F6BiAQFkmWDRfK6eZ5Ij4pQFMuhQ"
+
+  Name = bkp02.stpva.prod.vpc.sva.antel.com.uy-dir
+  Password = "HAIUAq7GNA1E8ELSci4vMACVQCTFsOlsdxi4n6dIBUTN"
+  Name = bkp02-mon
+  Password = "HAIUAq7GNA1E8ELSci4vMACVQCTFsOlsdxi4n6dIBUTN"

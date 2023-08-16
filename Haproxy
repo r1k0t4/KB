@@ -1,0 +1,45 @@
+HAPROXY
+
+#OBTENGO NODO UP
+echo 'show stat' | nc -U /var/run/haproxy.sock | grep apps | grep -v BACKEND | awk -F"," '{ print $2 ":" $18}'
+
+#DETENGO NODO
+echo "disable server backend/eltom01" | nc -U /var/run/haproxy.sock
+
+#HTTP_CHECK
+curl -sL -w "%{http_code}" -I 192.168.20.11:8080 -o /dev/null
+
+# Log fast reading:
+
+halog -srv -H < /var/log/haproxy-info.log | column -t
+218354 lines in, 0 lines out, 218354 parsing errors
+#srv_name  1xx  2xx  3xx  4xx  5xx  other  tot_req  req_ok  pct_ok  avg_ct  avg_rt
+
+halog -ut -H < /var/log/haproxy-info.log | column -t
+219169 lines in, 0 lines out, 219169 parsing errors
+#req  err  ttot  tavg  oktot  okavg  bavg  btot  src
+
+# LB - TCP # https://www.haproxy.com/documentation/hapee/latest/onepage/#8.2.2
+Feb 11 06:04:45 localhost haproxy[6202]: X-Forwarded: 10.255.241.82 10.255.241.83:58352 [11/Feb/2021:06:04:38.870] https-in~ group_1/tomcat1 6801/0/0/43/6844 200 2938 - JSESSIONID=6162428A40514B3828EDE --NI 6/6/0/1/0 0/0 {10.255.241.82} GET /flopersonas/servlet/hboton HTTP/1.1
+
+--NI =	N : the client provided NO cookie. This is usually the case for new visitors, so counting the number of occurrences of this flag in the
+            logs generally indicate a valid trend for the site frequentation.
+	I : no cookie was provided by the server, and the proxy INSERTED one. Note that in "cookie insert" mode, if the server provides a cookie,
+            it will still be overwritten and reported as "I" here.
+
+--VN =	V : the client provided a VALID cookie, and was sent to the associated server.
+	N : NO cookie was provided by the server, and none was inserted either.
+
+# LB - HTTP # https://www.haproxy.com/documentation/hapee/latest/onepage/#8.2.3
+ Feb 11 04:48:13 localhost haproxy[78710]: 192.168.20.13:36238 [11/Feb/2021:02:27:08.523] grupo2 galera2/oppdb2 1/1/8464869 17077487 cD 40/11/11/11/0 0/0
+
+cD = 	c : the client-side timeout expired while waiting for the client to
+            send or receive data.
+        D : the session was in the DATA phase.
+
+# Session state at disconnection	# 2 in TCP - 4 in HTTP	# https://www.haproxy.com/documentation/hapee/latest/onepage/#8.5
+LRNN =	L : the session was locally processed by haproxy and was not passed to a server. This is what happens for stats and redirects.
+	R : the proxy was waiting for a complete, valid REQUEST from the client (HTTP mode only). Nothing was sent to any server.
+	N : the client provided NO cookie. This is usually the case for new visitors, so counting the number of occurrences of this flag in the
+            logs generally indicate a valid trend for the site frequentation.
+	N : NO cookie was provided by the server, and none was inserted either.
