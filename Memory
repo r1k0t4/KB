@@ -130,3 +130,22 @@ cd pcstat
 go build
 sudo cp -a pcstat /usr/local/bin
 pcstat /usr/local/bin/pcstat
+
+# SWAPINESS
+# Swap when 10% us free, not 30%
+
+#Edit 1
+[root@opp-prod-grafana ~]# sysctl vm.swappiness=10
+vm.swappiness = 10
+#Edit 2
+[root@opp-prod-grafana ~]# vim /etc/sysctl.conf
+[root@opp-prod-grafana ~]# tail -1 /etc/sysctl.conf
+vm.swappiness = 10
+
+#Apply
+[root@opp-prod-grafana ~]# sysctl -p |grep swapp
+vm.swappiness = 10
+
+#Check
+[root@opp-prod-grafana ~]# cat /proc/sys/vm/swappiness
+30
