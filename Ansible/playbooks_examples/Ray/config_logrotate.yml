@@ -1,0 +1,40 @@
+---
+- name: Configure logrotate actions on host
+  hosts: "{{ inventory }}"
+  vars:
+    logrotate_run_hourly: false
+    general_rotate_options:
+      - daily
+      - dateext
+      - rotate 30
+      - missingok
+      - notifempty
+      - compress
+      - sharedscripts
+      - nodelaycompress
+      - copytruncate
+    logrotate_scripts:
+      - name: syslog
+        paths:
+        - /var/log/syslog
+        - /var/log/messages
+        - /var/log/secure
+        - /var/log/cron
+        - /var/log/spooler
+        options: "{{ general_rotate_options }}"
+        scripts:
+          postrotate:
+          - /bin/kill -HUP `cat /var/run/rsyslogd.pid 2> /dev/null` 2> /dev/null || true
+          - /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+      - name: bootlog
+        paths: 
+        - /var/log/boot.log
+        options:
+          - daily
+          - rotate 7
+          - missingok
+          - compress
+          - nodelaycompress
+          - copytruncate   
+  roles: 
+    - role: 'roles/common/logrotate'

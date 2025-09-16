@@ -1,0 +1,26 @@
+# URL
+https://regex101.com/
+
+# RegExp 
+- "mcast_addr=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+
+	mcast_addr=: Matches the literal string "mcast_addr=".
+	\d{1,3}: Matches one to three digits.
+	\.: Matches the dot character literally.
+	The above pattern is repeated three times to match the IPv4 address format.
+
+# RegExp - GREP
+- [root@java03 ~]# grep -Eo "mcast_addr=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" /opt/majestic/scripts/mj*.sh
+/opt/majestic/scripts/mj-audit.sh:mcast_addr=235.15.16.6
+/opt/majestic/scripts/mj-backoffice.sh:mcast_addr=235.15.15.5
+/opt/majestic/scripts/mj-camel-service.sh:mcast_addr=235.15.18.8
+/opt/majestic/scripts/mj-mock-service.sh:mcast_addr=235.15.16.6
+/opt/majestic/scripts/mj-systemAPI.sh:mcast_addr=235.15.19.9
+/opt/majestic/scripts/mj-traza.sh:mcast_addr=235.15.17.7
+
+	-o: Only output the matched part of the line.
+	-E: Use extended regular expressions.
+	mcast_addr=: Matches the literal string "mcast_addr=".
+	[0-9]{1,3}: Matches one to three digits.
+	\.: Matches the dot character literally.
+

@@ -1,0 +1,6 @@
+# https://github.com/ran-jit/tomcat-cluster-redis-session-manager
+
+https://stackoverflow.com/questions/28323936/redis-sentinels-in-same-servers-as-master-slave
+
+# MASTER [R1-S1] SLAVE [R2-S2] / APP [S3]
+https://severalnines.com/blog/redis-high-availability-architecture-sentinel/

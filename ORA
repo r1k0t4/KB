@@ -1,0 +1,11 @@
+#BUFFER DE SQLs en BG
+
+[oracle@mstroracledb:~]$cat aqui.sql
+sqlplus "/ as sysdba" <<EOF
+spool salida_ejecucion_temporal
+set timing on;
+SELECT distinct username FROM all_users;
+spool off;
+exit
+EOF
+[oracle@mstroracledb:~]$nohup ./aqui.sql &

@@ -1,0 +1,21 @@
+https://linuxconfig.org/how-to-set-the-primary-display-on-centos-rhel-7-with-dual-monitors-and-gnome
+
+[cl@cl nucleo]$ xrandr | grep -w connected
+eDP-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 344mm x 193mm
+HDMI-1 connected 1920x1080+1920+0 (normal left inverted right x axis y axis) 527mm x 297mm
+[cl@cl nucleo]$ 
+
+[cl@cl nucleo]$ xrandr --output HDMI-1 --primary
+[cl@cl nucleo]$ 
+
+[cl@cl nucleo]$ xrandr --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --mode 1920x1080 --pos 1280x512 --rotate normal
+
+[cl@cl ~]$ xrandr --output HDMI-1 --left-of eDP-1
+
+# CHECK ~/.config/monitors.xml
+
+[cl@cl KB]$ sudo cp /var/lib/gdm/.config/monitors.xml /home/CL/.var-lib-gdm-config-monitors.xml
+[cl@cl KB]$ sudo ls -l /var/lib/gdm/.config/monitors.xml
+-rw-r--r-- 1 root root 554 Apr 30  2020 /var/lib/gdm/.config/monitors.xml
+[cl@cl KB]$ sudo cp ~/.config/monitors.xml /var/lib/gdm/.config/monitors.xml
+

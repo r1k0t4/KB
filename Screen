@@ -1,0 +1,27 @@
+# https://kapeli.com/cheat_sheets/screen.docset/Contents/Resources/Documents/index
+
+# Session name
+screen -S ___
+
+# Detach
+^C a + d
+
+# List
+screen -ls
+
+# Attach
+screen -r/x ___
+
+# Save to log
+^C a + H
+
+       ────────────────────────────────────────────────────────────────────────────────
+       C-a h              (hardcopy)        Write a hardcopy of the current window  to
+                                            the file "hardcopy.n".
+       ────────────────────────────────────────────────────────────────────────────────
+       C-a H              (log)             Begins/ends  logging of the current window
+                                            to the file "screenlog.n".
+       ────────────────────────────────────────────────────────────────────────────────
+
+# Remove dead screen
+screen -wipe

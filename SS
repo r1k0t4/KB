@@ -1,0 +1,7 @@
+# Count established connections port ${PORT}
+
+[root@msp-db02 ~]# PORT=3306
+[root@msp-db02 ~]# ss -etn | grep ${PORT}| awk '{print $5}'| cut -d: -f1 | sort | uniq -c | awk -F " " '{print $1}' | paste -sd+ | bc
+2808
+[root@msp-db02 ~]# 
+

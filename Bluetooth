@@ -1,0 +1,337 @@
+##### BT ADMIN
+
+https://forums.centos.org/viewtopic.php?t=7591
+https://superuser.com/questions/1174165/bluetooth-ui-under-centos-7-cinnamon
+https://centos.pkgs.org/7/centos-x86_64/gnome-bluetooth-3.28.2-1.el7.x86_64.rpm.html
+https://askubuntu.com/questions/787768/send-file-through-bluetooth-crontab
+
+[cl@cl ~]$ bluetoothctl 
+[NEW] Controller 34:E1:2D:BB:93:CD BlueZ 5.44 [default]
+[NEW] Device EC:D0:9F:38:50:4F jamm
+[NEW] Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[NEW] Device B8:D5:0B:2C:F2:CE SRS-XB10
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001112-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001801-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110e-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001106-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001800-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001105-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001200-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110c-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001104-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110a-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110b-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001133-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000112f-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001132-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD Name: cl.admin
+[CHG] Controller 34:E1:2D:BB:93:CD Alias: BlueZ 5.44
+[CHG] Controller 34:E1:2D:BB:93:CD Class: 0x1c010c
+[CHG] Controller 34:E1:2D:BB:93:CD Powered: yes
+[CHG] Controller 34:E1:2D:BB:93:CD Alias: cl.admin
+[bluetooth]# exit
+[DEL] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[cl@cl ~]$ hcitool scan
+Scanning ...
+[cl@cl ~]$ man bluetoothctl 
+No manual entry for bluetoothctl
+[cl@cl ~]$ bluetoothctl 
+[NEW] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[NEW] Device B8:D5:0B:2C:F2:CE SRS-XB10
+[NEW] Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[NEW] Device EC:D0:9F:38:50:4F jamm
+[bluetooth]# ?
+Invalid command
+[bluetooth]# help
+Available commands:
+  list                       List available controllers
+  show [ctrl]                Controller information
+  select <ctrl>              Select default controller
+  devices                    List available devices
+  paired-devices             List paired devices
+  power <on/off>             Set controller power
+  pairable <on/off>          Set controller pairable mode
+  discoverable <on/off>      Set controller discoverable mode
+  agent <on/off/capability>  Enable/disable agent with given capability
+  default-agent              Set agent as the default one
+  advertise <on/off/type>    Enable/disable advertising with given type
+  set-advertise-uuids [uuid1 uuid2 ...] Set advertise uuids
+  set-advertise-service [uuid][data=[xx xx ...] Set advertise service data
+  set-advertise-manufacturer [id][data=[xx xx ...] Set advertise manufacturer data
+  set-advertise-tx-power <on/off> Enable/disable TX power to be advertised
+  set-scan-filter-uuids [uuid1 uuid2 ...] Set scan filter uuids
+  set-scan-filter-rssi [rssi] Set scan filter rssi, and clears pathloss
+  set-scan-filter-pathloss [pathloss] Set scan filter pathloss, and clears rssi
+  set-scan-filter-transport [transport] Set scan filter transport
+  set-scan-filter-clear      Clears discovery filter.
+  scan <on/off>              Scan for devices
+  info [dev]                 Device information
+  pair [dev]                 Pair with device
+  trust [dev]                Trust device
+  untrust [dev]              Untrust device
+  block [dev]                Block device
+  unblock [dev]              Unblock device
+  remove <dev>               Remove device
+  connect <dev>              Connect device
+  disconnect [dev]           Disconnect device
+  list-attributes [dev]      List attributes
+  set-alias <alias>          Set device alias
+  select-attribute <attribute> Select attribute
+  attribute-info [attribute] Select attribute
+  read                       Read attribute value
+  write <data=[xx xx ...]>   Write attribute value
+  notify <on/off>            Notify attribute value
+  register-profile <UUID ...> Register profile to connect
+  unregister-profile         Unregister profile
+  version                    Display version
+  quit                       Quit program
+[bluetooth]# list
+Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[bluetooth]# devices 
+Device B8:D5:0B:2C:F2:CE SRS-XB10
+Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+Device EC:D0:9F:38:50:4F jamm
+[bluetooth]# paired-devices
+Device B8:D5:0B:2C:F2:CE SRS-XB10
+Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[bluetooth]# pair EDIFIER\ R2730DB
+Device EDIFIER\ R2730DB not available
+[bluetooth]# pair "EDIFIER R2730DB
+Device "EDIFIER R2730DB not available
+[bluetooth]# pair "EDIFIER R2730DB"
+Device "EDIFIER R2730DB" not available
+[bluetooth]# pair 04:FE:A1:10:6A:61
+Attempting to pair with 04:FE:A1:10:6A:61
+Failed to pair: org.bluez.Error.AlreadyExists
+[bluetooth]# connect 04:FE:A1:10:6A:61
+Attempting to connect to 04:FE:A1:10:6A:61
+[CHG] Device 04:FE:A1:10:6A:61 Connected: yes
+Connection successful
+[CHG] Device 04:FE:A1:10:6A:61 ServicesResolved: yes
+[EDIFIER R2730DB]# 
+[EDIFIER R2730DB]# exit
+[DEL] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[cl@cl KB]$ bluetoothctl 
+[NEW] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[NEW] Device B8:D5:0B:2C:F2:CE SRS-XB10
+[NEW] Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[NEW] Device EC:D0:9F:38:50:4F jamm
+[EDIFIER R2730DB]# disco
+disconnect    discoverable  
+[EDIFIER R2730DB]# disco
+disconnect    discoverable  
+[EDIFIER R2730DB]# disconnect 
+Attempting to disconnect from 04:FE:A1:10:6A:61
+[CHG] Device 04:FE:A1:10:6A:61 ServicesResolved: no
+Successful disconnected
+[CHG] Device 04:FE:A1:10:6A:61 Connected: no
+[bluetooth]# exit
+[DEL] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+
+##### BT SOUND MANAGE
+
+https://opensource.com/article/17/1/linux-plays-sound
+
+[cl@cl KB]$ pavucontrol
+bash: pavucontrol: command not found...
+[cl@cl KB]$ yum whatprovides pavucontrol
+Loaded plugins: fastestmirror, langpacks, product-id, search-disabled-repos, subscription-manager
+Loading mirror speeds from cached hostfile
+ * base: espejito.fder.edu.uy
+ * epel: d2lzkl7pfhq30w.cloudfront.net
+ * epel-debuginfo: d2lzkl7pfhq30w.cloudfront.net
+ * epel-source: d2lzkl7pfhq30w.cloudfront.net
+ * epel-testing: d2lzkl7pfhq30w.cloudfront.net
+ * epel-testing-debuginfo: d2lzkl7pfhq30w.cloudfront.net
+ * epel-testing-source: d2lzkl7pfhq30w.cloudfront.net
+ * extras: espejito.fder.edu.uy
+ * rpmfusion-free-updates: mirror.math.princeton.edu
+ * updates: espejito.fder.edu.uy
+pavucontrol-3.0-5.el7.x86_64 : Volume control for PulseAudio
+Repo        : base
+
+
+
+[cl@cl KB]$ yum install pavucontrol
+Loaded plugins: fastestmirror, langpacks, product-id, search-disabled-repos, subscription-manager
+You need to be root to perform this command.
+[cl@cl KB]$ sudo yum install pavucontrol -y -q
+[cl@cl KB]$ pavucontrol
+
+(pavucontrol:4600): Gtk-WARNING **: 21:01:39.808: Theme parsing error: gtk.css:3408:30: The style property GtkButton:image-spacing is deprecated and shouldn't be used anymore. It will be removed in a future version
+
+(pavucontrol:4600): Gtk-WARNING **: 21:01:39.808: Theme parsing error: gtk.css:3409:29: The style property GtkButton:inner-border is deprecated and shouldn't be used anymore. It will be removed in a future version
+[cl@cl KB]$ 
+
+
+[root@cl cl]# rfkill list
+1: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+12: hci0: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+[root@cl cl]# 
+
+
+rfkill unblock all
+
+#########################
+
+https://bbs.archlinux.org/viewtopic.php?id=172261
+
+[cl@cl ~]$ bluetoothctl 
+[NEW] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[NEW] Device B8:D5:0B:2C:F2:CE SRS-XB10
+[NEW] Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[NEW] Device EC:D0:9F:38:50:4F jamm
+
+[bluetooth]# list
+Controller 34:E1:2D:BB:93:CD cl.admin [default]
+
+[bluetooth]# show
+Controller 34:E1:2D:BB:93:CD
+	Name: cl.admin
+	Alias: cl.admin
+	Class: 0x001f00
+	Powered: no
+	Discoverable: no
+	Pairable: no
+	UUID: Headset AG                (00001112-0000-1000-8000-00805f9b34fb)
+	UUID: Generic Attribute Profile (00001801-0000-1000-8000-00805f9b34fb)
+	UUID: A/V Remote Control        (0000110e-0000-1000-8000-00805f9b34fb)
+	UUID: OBEX File Transfer        (00001106-0000-1000-8000-00805f9b34fb)
+	UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)
+	UUID: OBEX Object Push          (00001105-0000-1000-8000-00805f9b34fb)
+	UUID: PnP Information           (00001200-0000-1000-8000-00805f9b34fb)
+	UUID: A/V Remote Control Target (0000110c-0000-1000-8000-00805f9b34fb)
+	UUID: IrMC Sync                 (00001104-0000-1000-8000-00805f9b34fb)
+	UUID: Audio Source              (0000110a-0000-1000-8000-00805f9b34fb)
+	UUID: Audio Sink                (0000110b-0000-1000-8000-00805f9b34fb)
+	UUID: Message Notification Se.. (00001133-0000-1000-8000-00805f9b34fb)
+	UUID: Phonebook Access Server   (0000112f-0000-1000-8000-00805f9b34fb)
+	UUID: Message Access Server     (00001132-0000-1000-8000-00805f9b34fb)
+	Modalias: usb:v1D6Bp0246d052C
+	Discovering: no
+
+[bluetooth]# power on
+[CHG] Controller 34:E1:2D:BB:93:CD Class: 0x1c010c
+Changing power on succeeded
+[CHG] Controller 34:E1:2D:BB:93:CD Powered: yes
+
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller 34:E1:2D:BB:93:CD Discovering: yes
+
+[bluetooth]# show
+Controller 34:E1:2D:BB:93:CD
+	Name: cl.admin
+	Alias: cl.admin
+	Class: 0x1c010c
+	Powered: yes
+	Discoverable: no
+	Pairable: no
+	UUID: Headset AG                (00001112-0000-1000-8000-00805f9b34fb)
+	UUID: Generic Attribute Profile (00001801-0000-1000-8000-00805f9b34fb)
+	UUID: A/V Remote Control        (0000110e-0000-1000-8000-00805f9b34fb)
+	UUID: OBEX File Transfer        (00001106-0000-1000-8000-00805f9b34fb)
+	UUID: Generic Access Profile    (00001800-0000-1000-8000-00805f9b34fb)
+	UUID: OBEX Object Push          (00001105-0000-1000-8000-00805f9b34fb)
+	UUID: PnP Information           (00001200-0000-1000-8000-00805f9b34fb)
+	UUID: A/V Remote Control Target (0000110c-0000-1000-8000-00805f9b34fb)
+	UUID: IrMC Sync                 (00001104-0000-1000-8000-00805f9b34fb)
+	UUID: Audio Source              (0000110a-0000-1000-8000-00805f9b34fb)
+	UUID: Audio Sink                (0000110b-0000-1000-8000-00805f9b34fb)
+	UUID: Message Notification Se.. (00001133-0000-1000-8000-00805f9b34fb)
+	UUID: Phonebook Access Server   (0000112f-0000-1000-8000-00805f9b34fb)
+	UUID: Message Access Server     (00001132-0000-1000-8000-00805f9b34fb)
+	Modalias: usb:v1D6Bp0246d052C
+	Discovering: yes
+
+[bluetooth]# devices
+Device B8:D5:0B:2C:F2:CE SRS-XB10
+Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+Device EC:D0:9F:38:50:4F jamm
+Device AC:C1:EE:8E:71:42 Redmi
+Device 40:0F:8A:9D:70:55 40-0F-8A-9D-70-55
+Device 6C:F0:DE:75:E2:8F 6C-F0-DE-75-E2-8F
+[bluetooth]# 
+
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller 34:E1:2D:BB:93:CD Discovering: yes
+[NEW] Device B8:D5:0B:9E:79:76 SRS-XB10
+[bluetooth]# pair B8:D5:0B:9E:79:76
+Attempting to pair with B8:D5:0B:9E:79:76
+[CHG] Device B8:D5:0B:9E:79:76 Connected: yes
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 00001101-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 00001108-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 0000110a-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 0000110b-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 0000110c-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 0000110e-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 0000111e-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 UUIDs: 00001200-0000-1000-8000-00805f9b34fb
+[CHG] Device B8:D5:0B:9E:79:76 ServicesResolved: yes
+[CHG] Device B8:D5:0B:9E:79:76 Paired: yes
+Pairing successful
+[SRS-XB10]# connect B8:D5:0B:9E:79:76
+Attempting to connect to B8:D5:0B:9E:79:76
+Connection successful
+[SRS-XB10]# 
+
+[cl@cl KB]$ sudo vim /etc/pulse/default.pa 
+[cl@cl KB]$ grep module-device-manager /etc/pulse/default.pa 
+load-module module-device-manager
+[cl@cl KB]$ 
+
+
+16112021
+
+cl@cl ~]$ bluetoothctl 
+[NEW] Controller 34:E1:2D:BB:93:CD BlueZ 5.44 [default]
+[NEW] Device EC:D0:9F:38:50:4F jamm
+[NEW] Device 04:FE:A1:10:6A:61 EDIFIER R2730DB
+[NEW] Device B8:D5:0B:2C:F2:CE SRS-XB10
+[NEW] Device B8:D5:0B:9E:79:76 SRS-XB10-BLUE
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001112-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001801-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110e-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001106-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001800-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001105-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001200-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110c-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001104-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110a-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000110b-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001133-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 0000112f-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD UUIDs: 00001132-0000-1000-8000-00805f9b34fb
+[CHG] Controller 34:E1:2D:BB:93:CD Name: cl.admin
+[CHG] Controller 34:E1:2D:BB:93:CD Alias: cl.admin
+[CHG] Controller 34:E1:2D:BB:93:CD Class: 0x1c010c
+[CHG] Controller 34:E1:2D:BB:93:CD Powered: yes
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller 34:E1:2D:BB:93:CD Discovering: yes
+[NEW] Device 6A:4F:64:DB:BA:E9 6A-4F-64-DB-BA-E9
+[bluetooth]# connect 6A:4F:64:DB:BA:E9
+Attempting to connect to 6A:4F:64:DB:BA:E9
+[CHG] Controller 34:E1:2D:BB:93:CD Pairable: yes
+[CHG] Controller 34:E1:2D:BB:93:CD DiscoverableTimeout: 0x000000
+[CHG] Controller 34:E1:2D:BB:93:CD DiscoverableTimeout: 0x000000
+[CHG] Controller 34:E1:2D:BB:93:CD Discoverable: no
+[CHG] Controller 34:E1:2D:BB:93:CD DiscoverableTimeout: 0x000000
+[CHG] Controller 34:E1:2D:BB:93:CD Discoverable: yes
+[NEW] Device 6D:C5:D9:B1:B1:DA 6D-C5-D9-B1-B1-DA
+[CHG] Device B8:D5:0B:9E:79:76 Connected: yes
+[CHG] Device B8:D5:0B:9E:79:76 Paired: yes
+[CHG] Device B8:D5:0B:9E:79:76 Trusted: yes
+[CHG] Device B8:D5:0B:9E:79:76 ServicesResolved: yes
+[SRS-XB10-BLUE]# quit
+[DEL] Controller 34:E1:2D:BB:93:CD cl.admin [default]
+[cl@cl ~]$ 
+

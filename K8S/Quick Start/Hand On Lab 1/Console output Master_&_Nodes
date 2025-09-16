@@ -1,0 +1,374 @@
+[root@cl documentacion]# ssh cloud_user@18.204.195.134
+	The authenticity of host '18.204.195.134 (18.204.195.134)' can't be established.
+ECDSA key fingerprint is SHA256:CG1BfgRWcKfRC9RLC4DMA6UkHHvMq07NF1agmbPIc/4.
+ECDSA key fingerprint is MD5:98:12:05:f3:6f:37:66:fb:2d:b4:ef:5e:05:e4:a8:bd.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '18.204.195.134' (ECDSA) to the list of known hosts.
+Password: 
+[cloud_user@k8smaster ~]$ 
+[cloud_user@k8smaster ~]$ sudo su  
+[sudo] password for cloud_user: 
+[root@k8smaster cloud_user]# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@k8smaster cloud_user]# setenforce 0
+[root@k8smaster cloud_user]# sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+[root@k8smaster cloud_user]# setenforce 0
+[root@k8smaster cloud_user]# sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux.
+sed: can't read /etc/sysconfig/selinux.: No such file or directory
+[root@k8smaster cloud_user]# modprobe br_netfilter
+[root@k8smaster cloud_user]# echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+[root@k8smaster cloud_user]# modprobe br_netfilter
+[root@k8smaster cloud_user]# echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+[root@k8smaster cloud_user]# yum install -y yum-utils device-mapper-persistent-data lvm2
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: d36uatko69830t.cloudfront.net
+ * extras: d36uatko69830t.cloudfront.net
+ * updates: d36uatko69830t.cloudfront.net
+base                                                                                                                                   | 3.6 kB  00:00:00     
+extras                                                                                                                                 | 2.9 kB  00:00:00     
+updates                                                                                                                                | 2.9 kB  00:00:00     
+(1/4): base/7/x86_64/group_gz                                                                                                          | 153 kB  00:00:00     
+(2/4): extras/7/x86_64/primary_db                                                                                                      | 206 kB  00:00:00     
+(3/4): updates/7/x86_64/primary_db                                                                                                     | 4.5 MB  00:00:00     
+(4/4): base/7/x86_64/primary_db                                                                                                        | 6.1 MB  00:00:06     
+Resolving Dependencies
+--> Running transaction check
+---> Package device-mapper-persistent-data.x86_64 0:0.8.5-2.el7 will be installed
+--> Processing Dependency: libaio.so.1(LIBAIO_0.4)(64bit) for package: device-mapper-persistent-data-0.8.5-2.el7.x86_64
+--> Processing Dependency: libaio.so.1(LIBAIO_0.1)(64bit) for package: device-mapper-persistent-data-0.8.5-2.el7.x86_64
+--> Processing Dependency: libaio.so.1()(64bit) for package: device-mapper-persistent-data-0.8.5-2.el7.x86_64
+---> Package lvm2.x86_64 7:2.02.186-7.el7_8.2 will be installed
+--> Processing Dependency: lvm2-libs = 7:2.02.186-7.el7_8.2 for package: 7:lvm2-2.02.186-7.el7_8.2.x86_64
+--> Processing Dependency: liblvm2app.so.2.2(Base)(64bit) for package: 7:lvm2-2.02.186-7.el7_8.2.x86_64
+--> Processing Dependency: libdevmapper-event.so.1.02(Base)(64bit) for package: 7:lvm2-2.02.186-7.el7_8.2.x86_64
+--> Processing Dependency: liblvm2app.so.2.2()(64bit) for package: 7:lvm2-2.02.186-7.el7_8.2.x86_64
+--> Processing Dependency: libdevmapper-event.so.1.02()(64bit) for package: 7:lvm2-2.02.186-7.el7_8.2.x86_64
+---> Package yum-utils.noarch 0:1.1.31-54.el7_8 will be installed
+--> Processing Dependency: python-kitchen for package: yum-utils-1.1.31-54.el7_8.noarch
+--> Processing Dependency: libxml2-python for package: yum-utils-1.1.31-54.el7_8.noarch
+--> Running transaction check
+---> Package device-mapper-event-libs.x86_64 7:1.02.164-7.el7_8.2 will be installed
+---> Package libaio.x86_64 0:0.3.109-13.el7 will be installed
+---> Package libxml2-python.x86_64 0:2.9.1-6.el7.4 will be installed
+---> Package lvm2-libs.x86_64 7:2.02.186-7.el7_8.2 will be installed
+--> Processing Dependency: device-mapper-event = 7:1.02.164-7.el7_8.2 for package: 7:lvm2-libs-2.02.186-7.el7_8.2.x86_64
+---> Package python-kitchen.noarch 0:1.1.1-5.el7 will be installed
+--> Running transaction check
+---> Package device-mapper-event.x86_64 7:1.02.164-7.el7_8.2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================
+ Package                                            Arch                        Version                                    Repository                    Size
+==============================================================================================================================================================
+Installing:
+ device-mapper-persistent-data                      x86_64                      0.8.5-2.el7                                base                         422 k
+ lvm2                                               x86_64                      7:2.02.186-7.el7_8.2                       updates                      1.3 M
+ yum-utils                                          noarch                      1.1.31-54.el7_8                            updates                      122 k
+Installing for dependencies:
+ device-mapper-event                                x86_64                      7:1.02.164-7.el7_8.2                       updates                      191 k
+ device-mapper-event-libs                           x86_64                      7:1.02.164-7.el7_8.2                       updates                      190 k
+ libaio                                             x86_64                      0.3.109-13.el7                             base                          24 k
+ libxml2-python                                     x86_64                      2.9.1-6.el7.4                              base                         247 k
+ lvm2-libs                                          x86_64                      7:2.02.186-7.el7_8.2                       updates                      1.1 M
+ python-kitchen                                     noarch                      1.1.1-5.el7                                base                         267 k
+
+Transaction Summary
+==============================================================================================================================================================
+Install  3 Packages (+6 Dependent packages)
+
+Total download size: 3.8 M
+Installed size: 11 M
+Downloading packages:
+(1/9): device-mapper-event-1.02.164-7.el7_8.2.x86_64.rpm                                                                               | 191 kB  00:00:00     
+(2/9): libaio-0.3.109-13.el7.x86_64.rpm                                                                                                |  24 kB  00:00:00     
+(3/9): device-mapper-event-libs-1.02.164-7.el7_8.2.x86_64.rpm                                                                          | 190 kB  00:00:00     
+(4/9): device-mapper-persistent-data-0.8.5-2.el7.x86_64.rpm                                                                            | 422 kB  00:00:00     
+(5/9): libxml2-python-2.9.1-6.el7.4.x86_64.rpm                                                                                         | 247 kB  00:00:00     
+(6/9): lvm2-libs-2.02.186-7.el7_8.2.x86_64.rpm                                                                                         | 1.1 MB  00:00:00     
+(7/9): yum-utils-1.1.31-54.el7_8.noarch.rpm                                                                                            | 122 kB  00:00:00     
+(8/9): lvm2-2.02.186-7.el7_8.2.x86_64.rpm                                                                                              | 1.3 MB  00:00:00     
+(9/9): python-kitchen-1.1.1-5.el7.noarch.rpm                                                                                           | 267 kB  00:00:00     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                          18 MB/s | 3.8 MB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : 7:device-mapper-event-libs-1.02.164-7.el7_8.2.x86_64                                                                                       1/9 
+  Installing : libaio-0.3.109-13.el7.x86_64                                                                                                               2/9 
+  Installing : device-mapper-persistent-data-0.8.5-2.el7.x86_64                                                                                           3/9 
+  Installing : 7:device-mapper-event-1.02.164-7.el7_8.2.x86_64                                                                                            4/9 
+  Installing : 7:lvm2-libs-2.02.186-7.el7_8.2.x86_64                                                                                                      5/9 
+  Installing : libxml2-python-2.9.1-6.el7.4.x86_64                                                                                                        6/9 
+  Installing : python-kitchen-1.1.1-5.el7.noarch                                                                                                          7/9 
+  Installing : yum-utils-1.1.31-54.el7_8.noarch                                                                                                           8/9 
+  Installing : 7:lvm2-2.02.186-7.el7_8.2.x86_64                                                                                                           9/9 
+  Verifying  : device-mapper-persistent-data-0.8.5-2.el7.x86_64                                                                                           1/9 
+  Verifying  : 7:lvm2-libs-2.02.186-7.el7_8.2.x86_64                                                                                                      2/9 
+  Verifying  : 7:device-mapper-event-1.02.164-7.el7_8.2.x86_64                                                                                            3/9 
+  Verifying  : python-kitchen-1.1.1-5.el7.noarch                                                                                                          4/9 
+  Verifying  : 7:lvm2-2.02.186-7.el7_8.2.x86_64                                                                                                           5/9 
+  Verifying  : libxml2-python-2.9.1-6.el7.4.x86_64                                                                                                        6/9 
+  Verifying  : libaio-0.3.109-13.el7.x86_64                                                                                                               7/9 
+  Verifying  : yum-utils-1.1.31-54.el7_8.noarch                                                                                                           8/9 
+  Verifying  : 7:device-mapper-event-libs-1.02.164-7.el7_8.2.x86_64                                                                                       9/9 
+
+Installed:
+  device-mapper-persistent-data.x86_64 0:0.8.5-2.el7             lvm2.x86_64 7:2.02.186-7.el7_8.2             yum-utils.noarch 0:1.1.31-54.el7_8            
+
+Dependency Installed:
+  device-mapper-event.x86_64 7:1.02.164-7.el7_8.2       device-mapper-event-libs.x86_64 7:1.02.164-7.el7_8.2       libaio.x86_64 0:0.3.109-13.el7           
+  libxml2-python.x86_64 0:2.9.1-6.el7.4                 lvm2-libs.x86_64 7:2.02.186-7.el7_8.2                      python-kitchen.noarch 0:1.1.1-5.el7      
+
+Complete!
+[root@k8smaster cloud_user]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+Loaded plugins: fastestmirror
+adding repo from: https://download.docker.com/linux/centos/docker-ce.repo
+grabbing file https://download.docker.com/linux/centos/docker-ce.repo to /etc/yum.repos.d/docker-ce.repo
+repo saved to /etc/yum.repos.d/docker-ce.repo
+[root@k8smaster cloud_user]# yum install -y docker-ce
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: d36uatko69830t.cloudfront.net
+ * extras: d36uatko69830t.cloudfront.net
+ * updates: d36uatko69830t.cloudfront.net
+docker-ce-stable                                                                                                                       | 3.5 kB  00:00:00     
+(1/2): docker-ce-stable/7/x86_64/updateinfo                                                                                            |   55 B  00:00:00     
+(2/2): docker-ce-stable/7/x86_64/primary_db                                                                                            |  46 kB  00:00:00     
+Resolving Dependencies
+--> Running transaction check
+---> Package docker-ce.x86_64 3:19.03.13-3.el7 will be installed
+--> Processing Dependency: container-selinux >= 2:2.74 for package: 3:docker-ce-19.03.13-3.el7.x86_64
+--> Processing Dependency: containerd.io >= 1.2.2-3 for package: 3:docker-ce-19.03.13-3.el7.x86_64
+--> Processing Dependency: docker-ce-cli for package: 3:docker-ce-19.03.13-3.el7.x86_64
+--> Running transaction check
+---> Package container-selinux.noarch 2:2.119.2-1.911c772.el7_8 will be installed
+---> Package containerd.io.x86_64 0:1.3.7-3.1.el7 will be installed
+---> Package docker-ce-cli.x86_64 1:19.03.13-3.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================
+ Package                               Arch                       Version                                          Repository                            Size
+==============================================================================================================================================================
+Installing:
+ docker-ce                             x86_64                     3:19.03.13-3.el7                                 docker-ce-stable                      24 M
+Installing for dependencies:
+ container-selinux                     noarch                     2:2.119.2-1.911c772.el7_8                        extras                                40 k
+ containerd.io                         x86_64                     1.3.7-3.1.el7                                    docker-ce-stable                      29 M
+ docker-ce-cli                         x86_64                     1:19.03.13-3.el7                                 docker-ce-stable                      38 M
+
+Transaction Summary
+==============================================================================================================================================================
+Install  1 Package (+3 Dependent packages)
+
+Total download size: 91 M
+Installed size: 385 M
+Downloading packages:
+(1/4): container-selinux-2.119.2-1.911c772.el7_8.noarch.rpm                                                                            |  40 kB  00:00:00     
+warning: /var/cache/yum/x86_64/7/docker-ce-stable/packages/docker-ce-19.03.13-3.el7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 621e9f35: NOKEY:-- ETA 
+Public key for docker-ce-19.03.13-3.el7.x86_64.rpm is not installed
+(2/4): docker-ce-19.03.13-3.el7.x86_64.rpm                                                                                             |  24 MB  00:00:00     
+(3/4): containerd.io-1.3.7-3.1.el7.x86_64.rpm                                                                                          |  29 MB  00:00:00     
+(4/4): docker-ce-cli-19.03.13-3.el7.x86_64.rpm                                                                                         |  38 MB  00:00:00     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                          60 MB/s |  91 MB  00:00:01     
+Retrieving key from https://download.docker.com/linux/centos/gpg
+Importing GPG key 0x621E9F35:
+ Userid     : "Docker Release (CE rpm) <docker@docker.com>"
+ Fingerprint: 060a 61c5 1b55 8a7f 742b 77aa c52f eb6b 621e 9f35
+ From       : https://download.docker.com/linux/centos/gpg
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : 2:container-selinux-2.119.2-1.911c772.el7_8.noarch                                                                                         1/4 
+  Installing : containerd.io-1.3.7-3.1.el7.x86_64                                                                                                         2/4 
+  Installing : 1:docker-ce-cli-19.03.13-3.el7.x86_64                                                                                                      3/4 
+  Installing : 3:docker-ce-19.03.13-3.el7.x86_64                                                                                                          4/4 
+  Verifying  : containerd.io-1.3.7-3.1.el7.x86_64                                                                                                         1/4 
+  Verifying  : 2:container-selinux-2.119.2-1.911c772.el7_8.noarch                                                                                         2/4 
+  Verifying  : 1:docker-ce-cli-19.03.13-3.el7.x86_64                                                                                                      3/4 
+  Verifying  : 3:docker-ce-19.03.13-3.el7.x86_64                                                                                                          4/4 
+
+Installed:
+  docker-ce.x86_64 3:19.03.13-3.el7                                                                                                                           
+
+Dependency Installed:
+  container-selinux.noarch 2:2.119.2-1.911c772.el7_8           containerd.io.x86_64 0:1.3.7-3.1.el7           docker-ce-cli.x86_64 1:19.03.13-3.el7          
+
+Complete!
+[root@k8smaster cloud_user]# sed -i '/^ExecStart/ s/$/ --exec-opt native.cgroupdriver=systemd/' /usr/lib/systemd/system/docker.service
+[root@k8smaster cloud_user]# systemctl daemon-reload
+[root@k8smaster cloud_user]# systemctl enable docker --now
+
+#EXTRA CHECKS
+
+[root@k8smaster cloud_user]# systemctl status docker
+[root@k8smaster cloud_user]# docker info | grep -i cgroup
+ Cgroup Driver: systemd
+[root@k8smaster cloud_user]# 
+
+Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service to /usr/lib/systemd/system/docker.service.
+[root@k8smaster cloud_user]# cat << EOF > /etc/yum.repos.d/kubernetes.repo
+> [kubernetes]
+> name=Kubernetes
+> baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+> enabled=1
+> gpgcheck=0
+> repo_gpgcheck=0
+> gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+> https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+> EOF
+
+[root@k8smaster cloud_user]# yum install -y kubelet kubeadm kubectl
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: d36uatko69830t.cloudfront.net
+ * extras: d36uatko69830t.cloudfront.net
+ * updates: d36uatko69830t.cloudfront.net
+kubernetes                                                                                                                             | 1.4 kB  00:00:00     
+kubernetes/primary                                                                                                                     |  78 kB  00:00:00     
+kubernetes                                                                                                                                            570/570
+Resolving Dependencies
+--> Running transaction check
+---> Package kubeadm.x86_64 0:1.19.2-0 will be installed
+--> Processing Dependency: kubernetes-cni >= 0.8.6 for package: kubeadm-1.19.2-0.x86_64
+--> Processing Dependency: cri-tools >= 1.13.0 for package: kubeadm-1.19.2-0.x86_64
+---> Package kubectl.x86_64 0:1.19.2-0 will be installed
+---> Package kubelet.x86_64 0:1.19.2-0 will be installed
+--> Processing Dependency: socat for package: kubelet-1.19.2-0.x86_64
+--> Processing Dependency: conntrack for package: kubelet-1.19.2-0.x86_64
+--> Running transaction check
+---> Package conntrack-tools.x86_64 0:1.4.4-7.el7 will be installed
+--> Processing Dependency: libnetfilter_cttimeout.so.1(LIBNETFILTER_CTTIMEOUT_1.1)(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+--> Processing Dependency: libnetfilter_cttimeout.so.1(LIBNETFILTER_CTTIMEOUT_1.0)(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+--> Processing Dependency: libnetfilter_cthelper.so.0(LIBNETFILTER_CTHELPER_1.0)(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+--> Processing Dependency: libnetfilter_queue.so.1()(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+--> Processing Dependency: libnetfilter_cttimeout.so.1()(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+--> Processing Dependency: libnetfilter_cthelper.so.0()(64bit) for package: conntrack-tools-1.4.4-7.el7.x86_64
+---> Package cri-tools.x86_64 0:1.13.0-0 will be installed
+---> Package kubernetes-cni.x86_64 0:0.8.7-0 will be installed
+---> Package socat.x86_64 0:1.7.3.2-2.el7 will be installed
+--> Running transaction check
+---> Package libnetfilter_cthelper.x86_64 0:1.0.0-11.el7 will be installed
+---> Package libnetfilter_cttimeout.x86_64 0:1.0.0-7.el7 will be installed
+---> Package libnetfilter_queue.x86_64 0:1.0.2-2.el7_2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==============================================================================================================================================================
+ Package                                        Arch                           Version                               Repository                          Size
+==============================================================================================================================================================
+Installing:
+ kubeadm                                        x86_64                         1.19.2-0                              kubernetes                         8.3 M
+ kubectl                                        x86_64                         1.19.2-0                              kubernetes                         9.0 M
+ kubelet                                        x86_64                         1.19.2-0                              kubernetes                          19 M
+Installing for dependencies:
+ conntrack-tools                                x86_64                         1.4.4-7.el7                           base                               187 k
+ cri-tools                                      x86_64                         1.13.0-0                              kubernetes                         5.1 M
+ kubernetes-cni                                 x86_64                         0.8.7-0                               kubernetes                          19 M
+ libnetfilter_cthelper                          x86_64                         1.0.0-11.el7                          base                                18 k
+ libnetfilter_cttimeout                         x86_64                         1.0.0-7.el7                           base                                18 k
+ libnetfilter_queue                             x86_64                         1.0.2-2.el7_2                         base                                23 k
+ socat                                          x86_64                         1.7.3.2-2.el7                         base                               290 k
+
+Transaction Summary
+==============================================================================================================================================================
+Install  3 Packages (+7 Dependent packages)
+
+Total download size: 61 M
+Installed size: 261 M
+Downloading packages:
+(1/10): conntrack-tools-1.4.4-7.el7.x86_64.rpm                                                                                         | 187 kB  00:00:00     
+(2/10): 14bfe6e75a9efc8eca3f638eb22c7e2ce759c67f95b43b16fae4ebabde1549f3-cri-tools-1.13.0-0.x86_64.rpm                                 | 5.1 MB  00:00:00     
+(3/10): d0ba40edfc0fdf3aeec3dd8e56c01ff0d3a511cc0012aabce55d9a83d9bf2b69-kubeadm-1.19.2-0.x86_64.rpm                                   | 8.3 MB  00:00:00     
+(4/10): b1b077555664655ba01b2c68d13239eaf9db1025287d0d9ccaeb4a8850c7a9b7-kubectl-1.19.2-0.x86_64.rpm                                   | 9.0 MB  00:00:00     
+(5/10): libnetfilter_cthelper-1.0.0-11.el7.x86_64.rpm                                                                                  |  18 kB  00:00:00     
+(6/10): libnetfilter_queue-1.0.2-2.el7_2.x86_64.rpm                                                                                    |  23 kB  00:00:00     
+(7/10): socat-1.7.3.2-2.el7.x86_64.rpm                                                                                                 | 290 kB  00:00:00     
+(8/10): libnetfilter_cttimeout-1.0.0-7.el7.x86_64.rpm                                                                                  |  18 kB  00:00:00     
+(9/10): d9d997cdbfd6562824eb7786abbc7f4c6a6825662d0f451793aa5ab8c4a85c96-kubelet-1.19.2-0.x86_64.rpm                                   |  19 MB  00:00:00     
+(10/10): db7cb5cb0b3f6875f54d10f02e625573988e3e91fd4fc5eef0b1876bb18604ad-kubernetes-cni-0.8.7-0.x86_64.rpm                            |  19 MB  00:00:00     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                          38 MB/s |  61 MB  00:00:01     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : libnetfilter_cthelper-1.0.0-11.el7.x86_64                                                                                                 1/10 
+  Installing : socat-1.7.3.2-2.el7.x86_64                                                                                                                2/10 
+  Installing : libnetfilter_cttimeout-1.0.0-7.el7.x86_64                                                                                                 3/10 
+  Installing : kubectl-1.19.2-0.x86_64                                                                                                                   4/10 
+  Installing : cri-tools-1.13.0-0.x86_64                                                                                                                 5/10 
+  Installing : libnetfilter_queue-1.0.2-2.el7_2.x86_64                                                                                                   6/10 
+  Installing : conntrack-tools-1.4.4-7.el7.x86_64                                                                                                        7/10 
+  Installing : kubernetes-cni-0.8.7-0.x86_64                                                                                                             8/10 
+  Installing : kubelet-1.19.2-0.x86_64                                                                                                                   9/10 
+  Installing : kubeadm-1.19.2-0.x86_64                                                                                                                  10/10 
+  Verifying  : kubeadm-1.19.2-0.x86_64                                                                                                                   1/10 
+  Verifying  : kubelet-1.19.2-0.x86_64                                                                                                                   2/10 
+  Verifying  : conntrack-tools-1.4.4-7.el7.x86_64                                                                                                        3/10 
+  Verifying  : kubernetes-cni-0.8.7-0.x86_64                                                                                                             4/10 
+  Verifying  : libnetfilter_queue-1.0.2-2.el7_2.x86_64                                                                                                   5/10 
+  Verifying  : cri-tools-1.13.0-0.x86_64                                                                                                                 6/10 
+  Verifying  : kubectl-1.19.2-0.x86_64                                                                                                                   7/10 
+  Verifying  : libnetfilter_cttimeout-1.0.0-7.el7.x86_64                                                                                                 8/10 
+  Verifying  : socat-1.7.3.2-2.el7.x86_64                                                                                                                9/10 
+  Verifying  : libnetfilter_cthelper-1.0.0-11.el7.x86_64                                                                                                10/10 
+
+Installed:
+  kubeadm.x86_64 0:1.19.2-0                           kubectl.x86_64 0:1.19.2-0                           kubelet.x86_64 0:1.19.2-0                          
+
+Dependency Installed:
+  conntrack-tools.x86_64 0:1.4.4-7.el7                 cri-tools.x86_64 0:1.13.0-0                          kubernetes-cni.x86_64 0:0.8.7-0                   
+  libnetfilter_cthelper.x86_64 0:1.0.0-11.el7          libnetfilter_cttimeout.x86_64 0:1.0.0-7.el7          libnetfilter_queue.x86_64 0:1.0.2-2.el7_2         
+  socat.x86_64 0:1.7.3.2-2.el7                        
+
+Complete!
+
+[root@k8smaster cloud_user]# systemctl enable kubelet
+Created symlink from /etc/systemd/system/multi-user.target.wants/kubelet.service to /usr/lib/systemd/system/kubelet.service.
+[root@k8smaster cloud_user]# 

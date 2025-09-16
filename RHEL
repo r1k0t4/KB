@@ -1,0 +1,5 @@
+[root@test-lezama-01 ~]# grep bacula /usr/lib/tmpfiles.d/initscripts.conf
+d /var/run/bacula 0755 bacula daemon -
+[root@test-lezama-01 ~]# 
+
+

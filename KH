@@ -1,0 +1,23 @@
+#clorenzo(su)=>/home/CLorenzo #: docker ps -s
+CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS              PORTS                                                                      NAMES                        SIZE
+7829c4bad5e1        jenkins/kh:2.328              "/sbin/tini -- /us..."   6 days ago          Up 6 days           0.0.0.0:8080->8080/tcp, 0.0.0.0:8443->8443/tcp, 0.0.0.0:50000->50000/tcp   kh_jenkins                   3.35 MB (virtual 446 MB)
+e2c0ab94aa7e        kh_mksvc_vdc_web_api          "python /app/api.py"     3 weeks ago         Up 3 weeks          0.0.0.0:30000->5000/tcp                                                    kh_py_frontend_api           138 kB (virtual 56.7 MB)
+aa949978bbca        kh_mksvc_hg_vcd               "/app/entrypoint.sh"     3 weeks ago         Up 3 weeks                                                                                     kh_cron_fetch_vcd_data       79.2 kB (virtual 80.1 MB)
+fdcb293df8b0        kh_mksvc_hg_vcd_login_ckeck   "/app/entrypoint.sh"     3 weeks ago         Up 3 weeks                                                                                     kh_cron_vcloud_check_login   88.9 kB (virtual 80 MB)
+61c3cdfef5ff        kh_mksvc_ssi                  "/app/rclone/entry..."   3 weeks ago
+
+# Listas daily check
+/opt/docker/kh_mksvc/shared_volume/json/kh_vcd_list.json
+
+# Scan now
+docker exec -it kh_cron_fetch_vcd_data python /app/main.py
+
+# Lista ORGS jenkins user admin ( Escaneado desde el groovy )
+ json_url = "http://192.168.12.19:30000/api/v1/vclouds"
+
+# Pass magmt
+#
+linux-vpn-gateway=>/opt/docker/kh_mksvc $: echo -n "claveprueba" | base64 -w 0
+Y2xhdmVwcnVlYmE=
+linux-vpn-gateway=>/opt/docker/kh_mksvc $: echo Y2xhdmVwcnVlYmE= | base64 -d
+clavepruebalinux-vpn-gateway=>/opt/docker/kh_mksvc $: 

@@ -1,0 +1,27 @@
+#SCAN ISCSI
+echo "- - -" > /sys/class/scsi_host/host0/scan
+
+for i in /sys/class/scsi_host/*/scan; do echo '- - -' > $i; done
+
+https://kerneltalks.com/disk-management/how-to-rescan-disk-in-linux-after-extending-vmware-disk/
+#SCAN DEVICE
+### Rescan device geometry
+echo 1 > /sys/class/scsi_device/0\:0\:0\:0/device/rescan
+# OR
+echo 1 > /sys/block/sda/device/rescan
+
+# dm cross device
+sudo dmsetup info -c
+
+# Get scisi - old school
+root@frontenddb04:/dev/disk/by-id# cd /dev/disk/by-path/
+root@frontenddb04:/dev/disk/by-path# ls -lrt
+total 0
+lrwxrwxrwx 1 root root  9 jul  1 18:58 pci-0000:03:00.0-scsi-0:0:2:0 -> ../../sdc
+lrwxrwxrwx 1 root root  9 jul  1 18:58 pci-0000:03:00.0-scsi-0:0:1:0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 jul  1 18:58 pci-0000:03:00.0-scsi-0:0:1:0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root  9 jul  1 18:58 pci-0000:03:00.0-scsi-0:0:0:0 -> ../../sda
+lrwxrwxrwx 1 root root 10 jul  1 18:58 pci-0000:03:00.0-scsi-0:0:0:0-part1 -> ../../sda1
+lrwxrwxrwx 1 root root 10 jul  6 09:49 pci-0000:03:00.0-scsi-0:0:0:0-part2 -> ../../sda2
+lrwxrwxrwx 1 root root  9 jul  6 09:49 pci-0000:03:00.0-scsi-0:0:3:0 -> ../../sdd
+root@frontenddb04:/dev/disk/by-path# 

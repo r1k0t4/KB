@@ -1,0 +1,276 @@
+####    RUNNING ANSIBLE PLAYBOOKS    ####
+
+PLAYBOOKS: ansible-playbook <options>
+
+ansible-playbook -C my-playbook.yml -e @file.yml
+
+ansible-playbook
+		-C	<DRY-RUN>
+		-e	<SELECT VARIABLE FILE>
+
+-----------------------------------------------------
+###  YAML ESSENTIALS ###
+---
+user:				#LIST
+- bob
+- john
+- cindy
+
+user:				#DICTIONARY
+  name: bob
+  job: engineer
+  salary: 10000
+
+
+include_newlines:  |		#MULTI-LINE
+  type_some text
+  more text
+  last text
+
+fold_new_lines:  >		#MULTI-LINE
+  Type some text
+  More text
+
+[] {} : >			#SPECIAL CHARACTERS
+				#Use " " to escape them
+
+"{{ var_name }}"		#VARIABLES
+				#Use " " to escape them
+
+become: yes	[true]	
+become: no	[false]
+
+version: "1.0"			#Floating pint numbers
+				#Use " " to escape them
+
+
+-----------------------------------------------------
+###  FOO.YAML   ###
+-----------------------------------------------------
+#COMMENT PLAY TARGET
+---
+
+- name: "name"
+  hosts: abc-cba
+  vars:
+   http_port: 80
+   max_clients: 200
+
+  [TASK]:
+  - name: [NAME]
+    [MODULE]: [DIRECTIVE1]=VALUE [DIRECTIVE2]=VALUE
+    yum: name=httpd state=latest
+     notify:
+      - restart apache
+
+  [HANDLERS]:
+  - name: restart apache
+    service: name=httpd state=restarted
+
+-----------------------------------------------------
+#COMMENT PLAY TARGET
+---
+- hosts: labs				# <- BEGINNING OF THE PLAY [HOST GROUP DEFINITION]
+  become: yes
+  gather_facts: no
+  tasks:				# HOSTS TASKS
+    # COMMENT N 1
+    - name: Install sofwtare X		# DESCRIPTION
+      yum:				# MODULE    [-m]
+        name: elinks			# ARGUMENTS [-a]
+        state: latest
+    # COMMENT N 2
+    - name: Install more software
+      yum:
+        name: nmap-ncat
+        state: latest
+
+- hosts: webservers
+  tasks:
+    - name: Test connection
+      ping:
+
+
+-----------------------------------------------------
+### VARIABLES ###
+working_dir: /path/to/work	#PATH VARIABLE
+
+service_list:			#SINGLE, LIST VARIABLE
+- dns
+- proxy
+- mta
+
+share_paths:			#DICTIONARY VARIABLES
+  nfs: /mnt/nfs
+  cifs: /mnt/cifs
+  iscsi: /mnt/iscsi
+
+#$ .../group_vars/remote		#Variables to REMOTE invetory group
+#$ /opt/ansible/inventories/testing/group_vars/
+#$ .../host_vars/host1			#Variables on HOST1
+#$ /opt/ansible/inventories/testing/host_vars/
+
+-----------------------------------------------------
+###  VARIABLE.FOO.YAML   ###
+-----------------------------------------------------
+#DESCRIPTION
+---
+- hosts: labs
+  tasks:
+    - name: create working directory
+      file:
+        name: "{{ working_dir }}"
+        state: directory
+    - name: Write service list
+      lineinfile:
+        path: "{{ working_dir }}/services.txt"
+        create: yes
+        lines: "{{ service_list }}"
+    - name: View share definitions
+      command: ls -la "{{ share_paths['nfs'] }}"	#Select '[KEY]'
+      register: cmd_output
+    - name: Weite command module on putputfile
+      copy:
+        content: "{{ cmd_output }}"
+
+-----------------------------------------------------
+### TEMPLATES ###
+
+#config.j2
+name={{ code_name }}
+version={{ version }}
+
+
+#Template example
+---
+- hosts: labs
+  gather_facts: no
+  vars:
+    version: "1.8"
+    code_name: whiskey
+  tasks:
+  - name: Just a task
+    template:
+      src: config.j2
+      dest: /opt/config
+
+
+-----------------------------------------------------
+### ANSIBLE FACTS ###
+-----------------------------------------------------
+# Ansible Facts example
+---
+- hosts: remote
+  tasks:
+    - name: create a file
+      lineinfile:
+        path: /home/ansible/hostname
+        create: yes
+        line: "{{ ansible_hostname }}"
+    - name: access magic variable
+      lineinfile:
+        path: /home/ansible/hostname
+        line: "{{ hostvars['localhost']['ansible_default_ipv4']['address'] }}"
+        # Other magic variables are groups, group_name, and inventory_hostname
+
+
+-----------------------------------------------------
+### CONDITIONAL EXECUTION ###
+-----------------------------------------------------
+# Ansible conditional example
+---
+- hosts: remote
+  vars:
+    target_file: /home/ansible/hostname
+  tasks:
+    - name: Gather file information
+      stat:
+        path: "{{ target_file }}"
+      register: hostname
+    - name: Rename hostname when found
+      command: mv "{{ target_file }}" /home/ansible/net-info
+      when: hostname.stat.exists 	# DOT separator
+      when: hostname['stat']['exists']  # STD expression
+      when: not hostname.stat.exists 	# ! Negative
+      when: hostname == "something"	# Equality expression
+      when: hostname <= "something"	# Equality expression
+      when: hostname >= "something"	# Equality expression
+
+
+-----------------------------------------------------
+### HANDLERS  ###
+-----------------------------------------------------
+# handler example
+---
+- hosts: scoldham2
+  become: yes
+  vars:
+    httpd_log_level: error
+  tasks:
+    - name: install httpd
+      yum:
+        name: httpd
+        state: latest
+    - name: update configuration
+      template:					# Checks if is not already modified, then notify, if does not change -> does not notify
+        src: /home/ansible/httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+      notify: httpd service			# Activate handler for calling what is listening for
+  handlers:
+    - name: httpd service
+      service:
+        name: httpd
+        state: restarted
+      listen: httpd service			# Activated when notified by a task. [ONLY RUNS ONCE !]
+
+-----------------------------------------------------
+#SELECTIVE PART OF PLAYBOOK
+# TAGS #
+-----------------------------------------------------
+
+Run play with parameter on ansible-playbook command to ask to run only tagged tasks.
+
+#RUN TAGS:
+-t software,files
+--tags software,files
+
+#SKIP TAGS:
+--skip-tags software
+
+-----------------------------------------------------
+#ANSIBLE VAULT
+#CONFIDENTIAL DATA!
+-----------------------------------------------------
+
+ansible-vault encrypt $FILE
+		      --vault-id prod@prompt
+#enter password (prod): 
+
+ansible-vault decript $FILE
+#prompt password
+ansible-vault view
+              edit
+	      encrypt_string --vault-id prod@prompt 'new_var = new-value'	<< This will output a string wich can be used on a playbook, and ansible handles it as a VAR.
+
+#Then, while running a play with vault items, you should set which vault-id corresond:
+ansible-playbook secret.yml --vault-id prod@prompt
+			    --vault-id prod@$PW_FILE << Plain text file, security leak
+                            
+
+-----------------------------------------------------
+#ERROR HANDLING !
+-----------------------------------------------------
+use --limit @/home/ansible/error1.retry		<< This will restrict play to failed hosts, not all the inventory.
+
+block
+debug
+always
+
+
+-----------------------------------------------------
+#Asynch
+-----------------------------------------------------
+async : 60	<< Gives 60 seconds to run task, after that ansible kill task
+poll : 10	<< Time lapse to check job status for ansible.
+
+

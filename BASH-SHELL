@@ -1,0 +1,50 @@
+#EXPLAINED SHELL[!]
+https://explainshell.com/explain?cmd=cut+-f+1+%7C+paste+-s+-d%2B+%7C+bc
+
+#IFS
+https://www.baeldung.com/linux/ifs-shell-variable
+
+# PARAM EXPANSION
+1. PASSWORD="${1-password}"
+
+This is a non-standard or incorrect form of parameter expansion. If you intended to provide a default value for $1, it should be:
+
+PASSWORD="${1:-password}"
+
+Correct Syntax: ${parameter:-default}
+
+This means:
+    If $1 is unset or null (empty), use "password" as the default.
+    Otherwise, use the value of $1.
+
+Example:
+
+#!/bin/bash
+PASSWORD="${1:-password}"
+echo "Password is: $PASSWORD"
+
+    ./script.sh hunter2 → Password is: hunter2
+    ./script.sh → Password is: password
+
+2. VARIABLE=${2:-0}
+
+This uses the correct form of defaulting:
+    If $2 is unset or null, then VARIABLE will be set to 0.
+    If $2 has a value, that value is used.
+
+Example:
+
+#!/bin/bash
+VARIABLE=${2:-0}
+echo "Variable is: $VARIABLE"
+
+    ./script.sh something 5 → Variable is: 5
+    ./script.sh something → Variable is: 0
+
+# Quick Summary of Syntax Forms:
+
+Expression	Meaning
+${var:-default}	Use default if var is unset or null
+${var:=default}	Assign default to var if it's unset or null
+${var:+alt}	Use alt only if var is set and not null
+${var:?error}	Show an error and exit if var is unset or null

@@ -1,0 +1,18 @@
+To check the load:
+sar -q -f /var/log/sa/sa$(date +%d -d yesterday)
+
+To check the CPU status:
+sar -p -f /var/log/sa/sa$(date +%d -d yesterday)
+
+To check the Swap Space usage:
+sar -S -f /var/log/sa/sa$(date +%d -d yesterday)
+
+To check the RAM memory usage:
+sar -r -f /var/log/sa/sa$(date +%d -d yesterday)
+
+#SAR
+sar -q          #Cpu Load
+sar -u ALL      #All data
+sar -s [ hh:mm:ss ]     #Start
+sar -e [ hh:mm:ss ]     #Ends
+

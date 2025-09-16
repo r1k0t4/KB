@@ -1,0 +1,40 @@
+[root@k8snode1 cloud_user]# kubeadm join 10.0.1.100:6443 --token 1c7jet.q5a16imbhaiqxql2 \
+>     --discovery-token-ca-cert-hash sha256:e8cd78dc1682db48a9749876b8b185fa426ed92b98100c0ddd264fb2aaa370af 
+[preflight] Running pre-flight checks
+	[WARNING Hostname]: hostname "k8snode1" could not be reached
+	[WARNING Hostname]: hostname "k8snode1": lookup k8snode1 on 10.0.0.2:53: no such host
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+[root@k8snode1 cloud_user]# 
+
+[root@k8snode2 cloud_user]# kubeadm join 10.0.1.100:6443 --token 1c7jet.q5a16imbhaiqxql2 \
+>     --discovery-token-ca-cert-hash sha256:e8cd78dc1682db48a9749876b8b185fa426ed92b98100c0ddd264fb2aaa370af 
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+
+[root@k8snode2 cloud_user]# 
+
+
+

@@ -1,0 +1,11 @@
+#Some of the bash special parameters that we will discuss in this article are: $*, $@, $#, $$, $!, $?, $-, $_
+
+https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/
+
+# Bash Script for Loop Explained with Examples
+https://phoenixnap.com/kb/bash-for-loop
+
+# Cambiar la extension de un archivo
+VAR1=pepe.tar
+${VAR1%.*}.txt 
+

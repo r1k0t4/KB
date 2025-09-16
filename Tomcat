@@ -1,0 +1,180 @@
+#TOMCAT-MANAGER
+tomcat-manager --quiet -u ""${USU}"" -p ""${PAS}"" http://prep-tomcat2:8080/manager status | grep worker | wc -l
+
+#JMX
+https://docs.cyclopsgroup.org/jmxterm
+https://rmoff.net/2018/09/19/exploring-jmx-with-jmxterm/
+
+wget https://github.com/jiaqi/jmxterm/releases/download/v1.0.2/jmxterm-1.0.2-uber.jar 
+
+java -jar jmxterm-1.0.2-uber.jar --url localhost:8009 -u tomcat -p tomcat 
+
+# https://cwiki.apache.org/confluence/display/KAFKA/jmxterm+quickstart
+
+$>beans -d java.lang
+#domain = java.lang:
+java.lang:name=Code Cache,type=MemoryPool
+java.lang:name=CodeCacheManager,type=MemoryManager
+java.lang:name=Compressed Class Space,type=MemoryPool
+java.lang:name=Metaspace Manager,type=MemoryManager
+java.lang:name=Metaspace,type=MemoryPool
+java.lang:name=PS Eden Space,type=MemoryPool
+java.lang:name=PS MarkSweep,type=GarbageCollector
+java.lang:name=PS Old Gen,type=MemoryPool
+java.lang:name=PS Scavenge,type=GarbageCollector
+java.lang:name=PS Survivor Space,type=MemoryPool
+java.lang:type=ClassLoading
+java.lang:type=Compilation
+java.lang:type=Memory
+java.lang:type=OperatingSystem
+java.lang:type=Runtime
+java.lang:type=Threading
+$>
+
+# INFO
+$>info -b java.lang:type=Threading
+#mbean = java.lang:type=Threading
+#class name = sun.management.ThreadImpl
+# attributes
+  %0   - AllThreadIds ([J, r)
+  %1   - CurrentThreadCpuTime (long, r)
+  %2   - CurrentThreadCpuTimeSupported (boolean, r)
+  %3   - CurrentThreadUserTime (long, r)
+  %4   - DaemonThreadCount (int, r)
+  %5   - ObjectMonitorUsageSupported (boolean, r)
+  %6   - ObjectName (javax.management.ObjectName, r)
+  %7   - PeakThreadCount (int, r)
+  %8   - SynchronizerUsageSupported (boolean, r)
+  %9   - ThreadAllocatedMemoryEnabled (boolean, rw)
+  %10  - ThreadAllocatedMemorySupported (boolean, r)
+  %11  - ThreadContentionMonitoringEnabled (boolean, rw)
+  %12  - ThreadContentionMonitoringSupported (boolean, r)
+  %13  - ThreadCount (int, r)
+  %14  - ThreadCpuTimeEnabled (boolean, rw)
+  %15  - ThreadCpuTimeSupported (boolean, r)
+  %16  - TotalStartedThreadCount (long, r)
+# operations
+  %0   - [Ljavax.management.openmbean.CompositeData; dumpAllThreads(boolean p0,boolean p1)
+  %1   - [J findDeadlockedThreads()
+  %2   - [J findMonitorDeadlockedThreads()
+  %3   - [J getThreadAllocatedBytes([J p0)
+  %4   - long getThreadAllocatedBytes(long p0)
+  %5   - [J getThreadCpuTime([J p0)
+  %6   - long getThreadCpuTime(long p0)
+  %7   - javax.management.openmbean.CompositeData getThreadInfo(long p0)
+  %8   - javax.management.openmbean.CompositeData getThreadInfo(long p0,int p1)
+  %9   - [Ljavax.management.openmbean.CompositeData; getThreadInfo([J p0,int p1)
+  %10  - [Ljavax.management.openmbean.CompositeData; getThreadInfo([J p0,boolean p1,boolean p2)
+  %11  - [Ljavax.management.openmbean.CompositeData; getThreadInfo([J p0)
+  %12  - [J getThreadUserTime([J p0)
+  %13  - long getThreadUserTime(long p0)
+  %14  - void resetPeakThreadCount()
+#there's no notifications
+
+$>get -s -b java.lang:type=Threading ThreadCount
+#mbean = java.lang:type=Threading:
+35
+$>
+
+# NON INTERACTIVE MODE
+https://cwiki.apache.org/confluence/display/KAFKA/jmxterm+quickstart
+
+[root@mtop.app.prep.sucive.gub.uy tmp]# cat commands 
+open 31010
+get -s -b java.lang:type=Threading ThreadCount
+close
+[root@mtop.app.prep.sucive.gub.uy tmp]# java -jar jmxterm-1.0.2-uber.jar -v silent -n < commands 
+34
+
+# https://gist.github.com/huynhbaoan/1bb4cd87313f56bc63cc4e19ce5c3ec7?permalink_comment_id=4302340
+$>domain java.lang
+#domain is set to java.lang
+
+$>beans
+#domain = java.lang:
+java.lang:name=Code Cache,type=MemoryPool
+java.lang:name=CodeCacheManager,type=MemoryManager
+java.lang:name=Compressed Class Space,type=MemoryPool
+java.lang:name=Metaspace Manager,type=MemoryManager
+java.lang:name=Metaspace,type=MemoryPool
+java.lang:name=PS Eden Space,type=MemoryPool
+java.lang:name=PS MarkSweep,type=GarbageCollector
+java.lang:name=PS Old Gen,type=MemoryPool
+java.lang:name=PS Scavenge,type=GarbageCollector
+java.lang:name=PS Survivor Space,type=MemoryPool
+java.lang:type=ClassLoading
+java.lang:type=Compilation
+java.lang:type=Memory
+java.lang:type=OperatingSystem
+java.lang:type=Runtime
+java.lang:type=Threading
+
+# If Name has space, follow it by \\
+#
+$>bean java.lang:name=Code\\ Cache,type=MemoryPool
+#bean is set to java.lang:name=Code Cache,type=MemoryPool
+
+$>info
+#mbean = java.lang:name=Code Cache,type=MemoryPool
+#class name = sun.management.MemoryPoolImpl
+# attributes
+  %0   - CollectionUsage (javax.management.openmbean.CompositeData, r)
+  %1   - CollectionUsageThreshold (long, rw)
+  %2   - CollectionUsageThresholdCount (long, r)
+  %3   - CollectionUsageThresholdExceeded (boolean, r)
+  %4   - CollectionUsageThresholdSupported (boolean, r)
+  %5   - MemoryManagerNames ([Ljava.lang.String;, r)
+  %6   - Name (java.lang.String, r)
+  %7   - ObjectName (javax.management.ObjectName, r)
+  %8   - PeakUsage (javax.management.openmbean.CompositeData, r)
+  %9   - Type (java.lang.String, r)
+  %10  - Usage (javax.management.openmbean.CompositeData, r)
+  %11  - UsageThreshold (long, rw)
+  %12  - UsageThresholdCount (long, r)
+  %13  - UsageThresholdExceeded (boolean, r)
+  %14  - UsageThresholdSupported (boolean, r)
+  %15  - Valid (boolean, r)
+# operations
+  %0   - void resetPeakUsage()
+#there's no notifications
+$>
+
+
+#JCMD
+https://community.cloudera.com/t5/Community-Articles/How-to-collect-threaddump-using-jcmd-and-analyse-it/ta-p/248391
+
+Example1: Classes taking the most memory are listed at the top, and classes are listed in a descending order.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.class_histogram  > /tmp/22421_ClassHistogram.txt
+
+Example2: Generate Heap Dump
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.heap_dump  /tmp/test123.hprof
+
+Example3: Explicitly request JVM to trigger a Garbage Collection Cycle.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  GC.run
+
+Example4: Generate Thread dump.
+
+usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  Thread.print
+
+Example5: List JVM properties.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $PID  VM.system_properties
+
+Example6: The Command line options along with the CLASSPATH setting.
+
+/usr/jdk64/jdk1.8.0_60/bin/jcmd  $ PID  VM.command_line
+
+# VERSION DE TOMAT
+[root@opp-prod-app01 ~]# cd /opt/tomcat/lib/
+[root@opp-prod-app01 lib]# java -cp catalina.jar org.apache.catalina.util.ServerInfo
+Server version: Apache Tomcat
+Server built:   Mar 14 2019 11:24:26 UTC
+Server number:  8.5.39.0
+OS Name:        Linux
+OS Version:     3.10.0-1062.18.1.el7.x86_64
+Architecture:   amd64
+JVM Version:    1.8.0_242-b08
+JVM Vendor:     Oracle Corporation

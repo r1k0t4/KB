@@ -1,0 +1,352 @@
+#########################################################
+                     INSTALLATION
+#########################################################
+
+    The first thing that we are going to do is use SSH to log in to all machines. Once we have logged in, we need to elevate privileges using sudo.
+
+    sudo su  
+
+    Disable SELinux.
+
+    setenforce 0
+    sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
+    Enable the br_netfilter module for cluster communication.
+
+    modprobe br_netfilter
+    echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+    Disable swap to prevent memory allocation issues.
+
+     swapoff -a
+     vim /etc/fstab  ->  Comment out the swap line
+
+    Install the Docker prerequisites.
+
+     yum install -y yum-utils device-mapper-persistent-data lvm2
+
+    Add the Docker repo and install Docker.
+
+     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+     yum install -y docker-ce
+
+    Configure the Docker Cgroup Driver to systemd, enable and start Docker
+
+     sed -i '/^ExecStart/ s/$/ --exec-opt native.cgroupdriver=systemd/' /usr/lib/systemd/system/docker.service 
+     systemctl daemon-reload
+     systemctl enable docker --now 
+     systemctl status docker
+     docker info | grep -i cgroup
+
+    Add the Kubernetes repo.
+
+    cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    enabled=1
+    gpgcheck=0
+    repo_gpgcheck=0
+    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+          https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    EOF
+
+    Install Kubernetes.
+
+     yum install -y kubelet kubeadm kubectl
+
+    Enable Kubernetes. The kubelet service will not start until you run kubeadm init.
+
+    systemctl enable kubelet
+
+*Note: Complete the following section on the MASTER ONLY!
+
+    Initialize the cluster using the IP range for Flannel.
+
+    kubeadm init --pod-network-cidr=10.244.0.0/16
+
+    Copy the kubeadm join command.
+
+    Exit sudo and run the following:
+
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+    Deploy Flannel.
+
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+    Check the cluster state.
+
+    kubectl get pods --all-namespaces
+
+
+#########################################################
+             POD CREATION [YML DEFINITION]
+#########################################################
+
+>> Create pod file
+
+cat ./pod_file
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: examplepod
+  namespace: pod-example
+spec:
+  volumes:
+  - name: html
+    emptyDir: {}
+  containers:
+  - name: webcontainer
+    image: nginx
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
+  - name: filecontainer
+    image: debian
+    volumeMounts:
+    - name: html
+      mountPath: /html
+    command: ["/bin/sh", "-c"]
+####### [ARGS 1] #######
+    args:
+      - echo "done"
+
+####### [ARGS 2] #######
+    args:
+      - while true; do
+         date >> /html/index.html;
+         sleep 1;
+        done
+
+#########################################################
+A CONTAINER WITHOUHT COMMAND RUNNING, EXISTS INMEDIATLY !
+#########################################################
+
+kubectl create -f ./pod_file
+
+kubectl --namespace=podexample get pods
+    1/2 READY   [!]
+
+kubectl --namespace=podexample delete pod podexample
+
+##
+REBUILD ## ARGS 2
+##
+
+kubectl --namespace=podexample get pods
+    2/2 RUNNING
+
+kubectl --namespace=podexample get pods -o wide
+
+##
+GET IP
+##
+
+curl $IP
+
+#########################################################
+                    NETWORKING AND DNS
+#########################################################
+
+#Network drivers:
+    - Flannel
+        https://github.com/coreos/flannel
+        kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-legacy.yml
+
+    - Weavenet
+    - Calico
+
+
+ip r
+
+ps -ax | grep flannel
+
+kubectl get pods --all-namespaces -o wide
+
+#Namespaces EG:
+
+kubectl get namespaces
+    web_data
+    web_logs
+
+>> Pods search DNS relative to their NAMESPACE
+A record 1 > database.web_data.svc.cluster.local
+A record 2 > webserver.web_data.svc.cluster.local
+A record 3 > logprocess.web_logs.svc.cluster.local
+
+kubectl get pods
+(COPY POD NAME)
+
+kubectl exec -it ${POD NAME} /bin/bash
+    cat /etc/resolv.conf    << Configures by kubelet when container was instanciated
+
+#########################################################
+                      REPLICA SETS
+#########################################################
+
+>> Define RS file
+
+cat ./replica_example.yml
+
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: nginx
+    tier: frontend
+spec:
+  #MODIFY REPLICAS ACCORDING TO EACH CASE
+  replicas: 2
+  selector:
+    matchLabels: 
+      tier: frontend
+    matchExpressions:
+      - {key: tier, operator: In, values: [frontend]}
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: darealmc/nginx-k8s:v1
+        ports:
+        - containerPort: 80
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  env:
+  - name: GET_HOSTS_FROM
+    value: dns
+    ports:
+    - containerPort: 80
+
+kubectl create -f ./replica_example.yml
+
+>> Describe Replica Set defined:
+
+kubectl describe rs/frontend
+
+kubectl get pods
+
+kubectl describe pods ${RS_POD_NAME}
+
+>> Scale RS with higher replicas
+
+kubectl scale rs/frontend --replicas=4
+
+>> Terminate PODS belonging to defined RS
+
+kubectl delete rs/frontend
+
+
+#########################################################
+                         SERVICES
+#########################################################
+
+
+>> Define Service file
+
+cat ./service_example.yml
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 32768
+    targetPort: 80
+
+>> kube-proxy > Grabs all pods defined on "selector" label, and put them behind the service.
+
+>> Lets create a service
+kubectl get pods    [EMPTY]
+
+kubectl create -f ./replica_example.yml
+
+kubectl get pods    [RS PODS]
+
+kubectl describe    ${POD_NAME_1}
+>> Grep for "Labels:" = app=nginx
+
+>> Create service
+kubectl create -f ./service_example.yml
+
+>> Describe service created
+kubectl describe service "my-service"
+
+>> Get service IP on service port defined
+curl ${IP}:32768 
+
+
+#########################################################
+                       DEPLOYMENTS
+#########################################################
+
+>> Create deployment file
+
+cat ./deployment.yaml
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment 
+  labels: 
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx 
+    spec: 
+      containers:
+      - name: nginx
+        image: darealmc/nginx-k8s:v1
+        ports:
+        - containerPort: 80
+
+>> Create deployment
+kubectl create -f ./deployment.yaml
+
+>> Get pods
+kubectl get pods
+
+>> Create services
+kubectl create -f ./service_example.yml
+
+>> Get service information
+kubectl describe service my-service
+
+>> Update deployment on the fly !
+kubectl set image deployment.v1.apps/example-deployment nginx=darealmc/nginx-k8s:v2
+
+>> Get deployment information
+kubectl get deployment
+
+Now, we can see "UP-TO-DATE" column, with 2 pods updated.
+
+>> Get deployment updated information.
+kubectl describe deployment example-deployment
+
+We can see <NONE> OldReplicaSets, and new ID on NewReplicaSet.
+
+

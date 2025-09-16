@@ -1,0 +1,43 @@
+#RELAY ONLY ONE DOMAIN
+https://mad9scientist.com/postfix-relay-mail-specific-domains/
+https://stackoverflow.com/questions/55159882/how-do-i-configure-postfix-to-only-relay-emails-from-a-specific-domain
+
+http://ssi.knowhow.com.uy/ssi/servlet/ing01?UPD,123090
+http://ssi.knowhow.com.uy/ssi/servlet/ing01?UPD,125358
+http://ssi.knowhow.com.uy/ssi/servlet/ing01?UPD,125867
+
+#Mail q problem summary:
+mailq | grep "(" | sed 's/\(8BITMIME\|    7BIT\)/        /' | sort | uniq -c
+
+#Mail queue list:
+postqueue -p
+mailq
+
+#Mail ID listing:
+mailq | awk '{print $1}' | grep -E "^([A-Z]|[0-9])"
+mailq | awk '{ print $1 }' | grep -Ev ^"(\(|root|\-|$)"
+#mailq | grep -v ^\( | grep ^[A-Z][0-9] | awk '{ print $1}'
+
+#Mail ID reading from listing:
+postcat -vq $(mailq | grep -v ^\( | grep ^[A-Z][0-9] | awk '{ print $1}') | grep Received
+postcat -vq $(mailq | awk '{print $1}' | grep -E "^([A-Z]|[0-9])")
+
+#Mail ID reading
+postcat -vq ${ID}
+
+#Remove mail q
+for ID in $(mailq | awk '{print $1}' | grep -E "^([A-Z]|[0-9])"); do postsuper -d $ID; done
+
+#TELNET AUTH
+https://knowledge.broadcom.com/external/article/164907/test-smtp-authentication-with-messaging.html
+
+#MAIL
+telnet example.com 25
+ehlo example.com
+AUTH LOGIN					# <- NOT NECCESARY, SOLO PARA AUTENTICAR
+MAIL FROM:<username@example.com>
+RCPT TO:<friend@hotmail.com>, <friend2@yahoo.com>
+data
+${TEXTO.....}
+${MAS_TEXTO.....}
+.

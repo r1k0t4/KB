@@ -1,0 +1,25 @@
+#LogRotate
+logrotate -f /etc/logrotate.d/syslog
+
+fecha="$(date +"%Y%m%d")"
+systemctl stop rsyslog
+mv /var/log/messages /var/log/messages-$fecha
+mv /var/log/secure /var/log/secure-$fecha
+systemctl start rsyslog
+
+for file in $(ls /var/log/ |grep -i 201 |egrep -Ev ".gz|.xz"); do gzip -9 $file; done
+
+#FILTERS
+echo 'if $programname == "systemd" and ($msg contains "Starting Session" or $msg contains "Started Session" or $msg contains "Created slice" or $msg contains "Starting user-" or $msg contains "Starting User Slice of" or $msg contains "Removed session" or $msg contains "Removed slice User Slice of" or $msg contains "Stopping User Slice of") then stop' > /etc/rsyslog.d/ignore-systemd-session-slice.conf
+
+echo 'if $programname == "filebeat" then stop' > /etc/rsyslog.d/ignore-filebeat.conf
+
+#Quitar logs duplicados (Auditd)
+https://www.thegeekdiary.com/how-to-stop-audit-log-entries-written-to-system-logs-in-centos-rhel-6/
+
+https://access.redhat.com/discussions/650853
+
+$ grep active /etc/audisp/plugins.d/syslog.conf
+active = no
+
+$ service auditd restart || systemctl reload auditd

@@ -1,0 +1,25 @@
+ 9520  cinnamon-settings
+ 9521  sudo pip3 install pillow=='6.0.0'
+ 9522  cinnamon-settings
+ 9523  pip3 install pillow=='6.0.0'
+ 9524  python -V
+ 9525  cinnamon-settings
+ 9526  sudo cinnamon-settings
+ 9527  vim /usr/share/cinnamon/cinnamon-settings/cinnamon-settings.py
+ 9528  sudo cinnamon-settings
+ 9529  which-config cinnamon-settings
+ 9530  which cinnamon-settings
+ 9531  python3 /usr/bin/cinnamon-settings
+ 9532  python /usr/bin/cinnamon-settings
+ 9533  python2 /usr/bin/cinnamon-settings
+ 9534  cinnamon-settings
+ 9535  vim /usr/share/cinnamon/cinnamon-settings/bin/imtools.py
+ 9536  sudo vim /usr/share/cinnamon/cinnamon-settings/bin/imtools.py
+ 9537  sudo grep VERSION /usr/share/cinnamon/cinnamon-settings/bin/imtools.py
+ 9538  sudo vim /usr/share/cinnamon/cinnamon-settings/bin/imtools.py
+ 9539   sudo cp /usr/share/cinnamon/cinnamon-settings/bin/imtools.py /usr/share/cinnamon/cinnamon-settings/bin/imtools.py.bak
+ 9540  sudo vim /usr/share/cinnamon/cinnamon-settings/bin/imtools.py 
+ 9541  sudo tail /var/log/messages
+ 9542  sudo tailf /var/log/messages
+ 9543  rpm -qa | grep -i pillow
+

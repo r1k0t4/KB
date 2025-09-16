@@ -1,0 +1,12 @@
+#!/usr/bin/expect
+
+set Password ""
+
+#spawn ./Expect.sh
+spawn /usr/lib/jvm/jdk-11.0.18/bin/keytool -list -keystore /usr/lib/jvm/jdk-11.0.18/lib/security/cacerts
+
+expect "*assword:"
+
+send "$Password\r"
+
+expect eof

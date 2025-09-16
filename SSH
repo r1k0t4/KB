@@ -1,0 +1,11 @@
+https://9to5answer.com/how-to-disable-ssh-agent-forwarding
+
+[cl@cl ~]$ vim .ssh/data/0100-knowhow.config 
+Host sopo.knowhow.tata tata
+  Hostname 192.168.12.33
+  User root
+#  IdentityFile ~/.ssh/id_rsa_cl
+  IdentityFile ~/.ssh/id_rsa_tata_cl
+  ProxyCommand ssh -q -W %h:%p -i ~/.ssh/clorenzo clorenzo@gateway.knowhow.prod
+  UserKnownHostsFile ~/.ssh/known_hosts_kh_infra
+  IdentityAgent none

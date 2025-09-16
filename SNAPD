@@ -1,0 +1,20 @@
+[cl@cl ~]$ sudo snap login
+Personal information is handled as per our privacy notice at
+https://www.ubuntu.com/legal/dataprivacy/snap-store
+
+Email address: crucho15@gmail.com
+Password of "crucho15@gmail.com": 
+Login successful
+[cl@cl ~]$ 
+
+
+[cl@cl KB]$ snap install discord
+Warning: /var/lib/snapd/snap/bin was not found in your $PATH. If you've not restarted your session
+         since you installed snapd, try doing that. Please see https://forum.snapcraft.io/t/9469
+         for more details.
+
+discord 0.0.19 from Snapcrafters installed
+[cl@cl KB]$ 
+
+
+

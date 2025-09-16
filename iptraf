@@ -1,0 +1,32 @@
+#IPTRAF
+iptraf-ng: option requires an argument -- 'd'
+usage: iptraf-ng [options]
+   or: iptraf-ng [options] -B [-i <iface> | -d <iface> | -s <iface> | -z <iface> | -l <iface> | -g]
+
+    -h, --help            show this help message
+
+    -i <iface>            start the IP traffic monitor (use '-i all' for all interfaces)
+    -d <iface>            start the detailed statistics facility on an interface
+    -s <iface>            start the TCP and UDP monitor on an interface
+    -z <iface>            shows the packet size counts on an interface
+    -l <iface>            start the LAN station monitor (use '-l all' for all LAN interfaces)
+    -g                    start the general interface statistics
+
+    -B                    run in background (use only with one of the above parameters
+    -f                    clear all locks and counters
+    -t <n>                run only for the specified <n> number of minutes
+    -L <logfile>          specifies an alternate log file
+
+
+#Run statistics in BG:
+iptraf-ng -B -d ens224
+
+#Kill ( Stop and record ) BG process
+kill -SIGUSR2 $PID
+
+SIGNALS
+        SIGUSR1 - rotates log files while program is running
+        SIGUSR2 - terminates an IPTraf process running in the background.
+
+#Check logs
+cat /var/log/iptraf-ng/____

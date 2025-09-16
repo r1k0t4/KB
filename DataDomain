@@ -1,0 +1,32 @@
+#DATADOMAIN
+#sysadmin Password123$
+#
+
+sysadmin@ddomain-am07# nfs add /data/col1/backups-ndc-ges-vera-pa 192.168.250.78 (sec=sys,rw,no_root_squash,no_all_squash,secure,version=3:4)
+
+sysadmin@ddomain-am07# nfs export show list
+
+sysadmin@ddomain-am07# nfs show clients
+
+sysadmin@ddomain-am07# mtree list
+
+sysadmin@ddomain-am07# user show list
+
+sysadmin@ddomain-am07# nfs add /data/col1/backups-ndc-ges-vera-pa 192.168.250.78 (sec=sys,rw,no_root_squash,no_all_squash,secure,version=3:4)
+
+sysadmin@ddomain-am07# filesys clean status
+Cleaning finished at 2023/02/21 11:39:04.
+sysadmin@ddomain-am07# 
+
+sysadmin@ddomain-am07# filesys clean show config
+	50 Percent Throttle
+Filesystem cleaning is scheduled to run "Tue" at "0600".
+sysadmin@ddomain-am07# 
+
+sysadmin@ddomain-am07# filesys show space
+
+Id.Tarea	Fecha	Titulo
+125533	24/09/2021 11:27	ANTEL:STP: Autorizar trafico snmp entre zabbix5 y DataDomain en lezama [HG#60082]
+130644	24/09/2021 11:28	ANTEL:STP: Acceso scp al DD de VeraPa con latencia [HG#70415]
+136301	24/09/2021 11:06	ANTEL:STP: Problema de acceso a vcenter de lezama y pando desde equipo local. [HG#80519]
+136351	24/09/2021 11:13	ANTEL: Creacion de vm e instalacion de Servidor Bacula en Pando para migracion de NDC [HG80332]

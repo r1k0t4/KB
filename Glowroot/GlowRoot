@@ -1,0 +1,134 @@
+#TK KH 108768
+
+####OPP-CAPA-DB02 - SERVER
+[root@opp-capa-db02 SLAVE-DB02 .32 /opt/glowroot-central ]#: java -jar glowroot-central.jar &
+
+[root@opp-capa-db02 SLAVE-DB02 .32 /opt/glowroot-central ]#: 2019-09-25 10:47:33.176 INFO  org.glowroot - Glowroot version: 0.12.3, built 2018-12-11 20:43:23 +0000
+2019-09-25 10:47:33.181 INFO  org.glowroot - Java version: 1.8.0_212
+2019-09-25 10:47:33.586 INFO  c.datastax.driver.core.ClockFactory - Using native clock to generate timestamps.
+2019-09-25 10:47:33.595 INFO  com.datastax.driver.core - DataStax Java driver 3.6.0 for Apache Cassandra
+2019-09-25 10:47:33.598 INFO  c.d.driver.core.GuavaCompatibility - Detected Guava >= 19 in the classpath, using modern compatibility layer
+2019-09-25 10:47:33.749 INFO  com.datastax.driver.core.NettyUtil - Did not find Netty's native epoll transport in the classpath, defaulting to NIO.
+2019-09-25 10:47:37.122 INFO  c.d.d.c.p.DCAwareRoundRobinPolicy - Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+2019-09-25 10:47:37.124 INFO  com.datastax.driver.core.Cluster - New Cassandra host /127.0.0.1:9042 added
+2019-09-25 10:47:37.820 INFO  org.glowroot - connected to Cassandra (version 3.11.4), using keyspace 'glowroot' (replication factor 1) and consistency level QUORUM
+2019-09-25 10:47:40.401 INFO  org.glowroot - gRPC listening on 0.0.0.0:8181
+2019-09-25 10:47:40.948 INFO  org.glowroot - UI listening on 0.0.0.0:4000
+2019-09-25 10:47:40.949 INFO  org.glowroot - startup complete
+2019-09-25 10:47:50.699 INFO  o.g.central.DownstreamServiceImpl - downstream connection (re-)established with agent: 192.168.22.11
+2019-09-25 10:47:53.668 INFO  com.datastax.driver.core.utils.UUIDs - PID obtained through native call to getpid(): 66114
+2019-09-25 10:48:04.981 INFO  o.g.central.DownstreamServiceImpl - downstream connection (re-)established with agent: 192.168.22.12
+
+###GLOW ROOT CHECK
+###PID FILTER
+[root@opp-capa-db02 SLAVE-DB02 .32 /opt/glowroot-central ]#: ss -lntp | grep 67777
+LISTEN     0      128         :::4000                    :::*                   users:(("java",pid=67777,fd=337))
+LISTEN     0      128         :::8181                    :::*                   users:(("java",pid=67777,fd=166))
+
+[root@opp-capa-db02 SLAVE-DB02 .32 /opt/glowroot-central ]#: lsof -i :4000
+COMMAND   PID USER   FD   TYPE    DEVICE SIZE/OFF NODE NAME
+java    67777 root  337u  IPv6 135910605      0t0  TCP *:terabase (LISTEN)
+
+[root@opp-capa-db02 SLAVE-DB02 .32 /opt/glowroot-central ]#: lsof -i :8181
+COMMAND   PID USER   FD   TYPE    DEVICE SIZE/OFF NODE NAME
+java    67777 root  166u  IPv6 135910548      0t0  TCP *:intermapper (LISTEN)
+java    67777 root  338u  IPv6 194285103      0t0  TCP opp-capa-db02:intermapper->192.168.22.12:49272 (ESTABLISHED)
+java    67777 root  339u  IPv6 188328062      0t0  TCP opp-capa-db02:intermapper->192.168.22.11:40648 (ESTABLISHED)
+java    67777 root  341u  IPv6 194795715      0t0  TCP opp-capa-db02:intermapper->192.168.22.12:48116 (ESTABLISHED)
+java    67777 root  342u  IPv6 194802638      0t0  TCP opp-capa-db02:intermapper->192.168.22.11:48188 (ESTABLISHED)
+
+###AGENT INSTALL
+https://github.com/glowroot/glowroot/wiki/Agent-Installation-(for-Central-Collector)
+
+###OPP-CAPA-APP01 - CLIENT 1
+[root@opp-capa-app01 ~]# ps aux |grep glow
+tomcat    30860  2.2 40.6 8420540 2828708 ?     Sl   Sep16 297:09 /usr/lib/jvm/jre/bin/java -Djava.util.logging.config.file=/opt/tomcat/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom -javaagent:/opt/glowroot/glowroot.jar -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Xms3072M -Xmx4096M -server -XX:+UseParallelGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.password.file=/opt/tomcat/conf/jmxremote.password -Dcom.sun.management.jmxremote.access.file=/opt/tomcat/conf/jmxremote.access -Dcom.sun.management.jmxremote.ssl=false -Dignore.endorsed.dirs= -classpath /opt/tomcat/bin/bootstrap.jar:/opt/tomcat/bin/tomcat-juli.jar -Dcatalina.base=/opt/tomcat -Dcatalina.home=/opt/tomcat -Djava.io.tmpdir=/opt/tomcat/temp org.apache.catalina.startup.Bootstrap start
+root     116328  0.0  0.0 112708   976 pts/0    S+   10:53   0:00 grep --color=auto glow
+
+[root@opp-capa-app01 ~]# ss -ltnp |grep 30860
+LISTEN     0      50          :::44925                   :::*                   users:(("java",pid=30860,fd=28))
+LISTEN     0      50          :::9090                    :::*                   users:(("java",pid=30860,fd=73))
+LISTEN     0      1         ::ffff:127.0.0.1:8005                    :::*                   users:(("java",pid=30860,fd=97))
+LISTEN     0      50        ::ffff:192.168.22.11:4200                    :::*                   users:(("java",pid=30860,fd=74))
+LISTEN     0      100         :::8009                    :::*                   users:(("java",pid=30860,fd=68))
+LISTEN     0      50          :::1099                    :::*                   users:(("java",pid=30860,fd=72))
+LISTEN     0      100         :::8080                    :::*                   users:(("java",pid=30860,fd=64))
+[root@opp-capa-app01 ~]#
+
+[root@opp-capa-app01 ~]# cd /opt/glowroot/
+[root@opp-capa-app01 opt]# ll
+total 12
+drwxr-xr-x.  3 root   root   4096 Dec 14  2018 conector-pge
+drwxr-xr-x.  5 tomcat tomcat 4096 Sep  6 12:28 glowroot
+
+[root@opp-capa-app01 glowroot]# cat glowroot.properties 
+conf.dir=/opt/glowroot
+log.dir=/opt/glowroot/logs
+tmp.dir=/opt/glowroot/tmp
+data.dir=/opt/glowroot
+agent.id=192.168.22.11
+collector.address=http://192.168.22.32:8181
+[root@opp-capa-app01 ~]# cat /etc/sysconfig/tomcat 
+#Where your java installation lives
+JAVA_HOME="/usr/lib/jvm/jre"
+# Where your tomcat installation lives
+CATALINA_BASE="/opt/tomcat"
+CATALINA_HOME="/opt/tomcat"
+CATALINA_PID="/opt/tomcat/temp/tomcat.pid"
+CATALINA_OPTS="-Xms3072M -Xmx4096M -server -XX:+UseParallelGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.password.file=$CATALINA_HOME/conf/jmxremote.password -Dcom.sun.management.jmxremote.access.file=$CATALINA_HOME/conf/jmxremote.access -Dcom.sun.management.jmxremote.ssl=false"
+# You can pass some parameters to java here if you wish to
+JAVA_OPTS="-Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom -javaagent:/opt/glowroot/glowroot.jar"
+[root@opp-capa-app01 ~]#
+
+root@opp-capa-app01 glowroot]# netstat -atun |grep 8181
+tcp6       0      0 192.168.22.11:49332     192.168.22.32:8181      ESTABLISHED
+[root@opp-capa-app01 glowroot]#
+
+###OPP-CAPA-APP02 - CLIENT 2
+
+[root@opp-capa-app02 ~]# ps aux |grep glow
+tomcat    42633  2.7 37.3 8289452 2602824 ?     Sl   Sep24  28:55 /usr/lib/jvm/jre/bin/java -Djava.util.logging.config.file=/opt/tomcat/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom -javaagent:/opt/glowroot/glowroot.jar -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dorg.apache.catalina.security.SecurityListener.UMASK=0027 -Xms3072M -Xmx4096M -server -XX:+UseParallelGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.password.file=/opt/tomcat/conf/jmxremote.password -Dcom.sun.management.jmxremote.access.file=/opt/tomcat/conf/jmxremote.access -Dcom.sun.management.jmxremote.ssl=false -Dignore.endorsed.dirs= -classpath /opt/tomcat/bin/bootstrap.jar:/opt/tomcat/bin/tomcat-juli.jar -Dcatalina.base=/opt/tomcat -Dcatalina.home=/opt/tomcat -Djava.io.tmpdir=/opt/tomcat/temp org.apache.catalina.startup.Bootstrap start
+root      66133  0.0  0.0 112704   972 pts/0    S+   10:57   0:00 grep --color=auto glow
+[root@opp-capa-app02 ~]#
+
+[root@opp-capa-app02 ~]# ss -ltnp |grep 42633
+LISTEN     0      50          :::9090                    :::*                   users:(("java",pid=42633,fd=73))
+LISTEN     0      1         ::ffff:127.0.0.1:8005                    :::*                   users:(("java",pid=42633,fd=97))
+LISTEN     0      50          :::41254                   :::*                   users:(("java",pid=42633,fd=28))
+LISTEN     0      50        ::ffff:192.168.22.12:4200                    :::*                   users:(("java",pid=42633,fd=74))
+LISTEN     0      100         :::8009                    :::*                   users:(("java",pid=42633,fd=68))
+LISTEN     0      50          :::1099                    :::*                   users:(("java",pid=42633,fd=72))
+LISTEN     0      100         :::8080                    :::*                   users:(("java",pid=42633,fd=64))
+[root@opp-capa-app02 ~]#
+
+[root@opp-capa-app02 ~]# cd /opt/glowroot/
+[root@opp-capa-app02 glowroot]# cat glowroot.properties 
+conf.dir=/opt/glowroot
+log.dir=/opt/glowroot/logs
+tmp.dir=/opt/glowroot/tmp
+data.dir=/opt/glowroot
+agent.id=192.168.22.12
+collector.address=http://192.168.22.32:8181
+[root@opp-capa-app02 glowroot]#
+
+[root@opp-capa-app02 glowroot]# netstat -atun |grep 8181
+tcp6       0      0 192.168.22.12:49408     192.168.22.32:8181      ESTABLISHED
+[root@opp-capa-app02 glowroot]# 
+
+
+#CASSANDRA
+[root@opp-capa-db02 SLAVE-DB02 .32 /etc/cassandra/conf ]#: cat /etc/yum.repos.d/cassandra.repo
+[cassandra]
+name=Apache Cassandra
+baseurl=https://www.apache.org/dist/cassandra/redhat/311x/
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://www.apache.org/dist/cassandra/KEYS
+
+[root@opp-capa-db02 SLAVE-DB02 .32 /etc/cassandra/conf ]#: vim /etc/cassandra/default.conf/cassandra-env.sh
+
+yum install cassandra
+systemctl start cassandra
+systemctl status cassandra
+systemctl enable cassandra
+

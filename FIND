@@ -1,0 +1,12 @@
+#FIND
+find . -type f -exec du -Sh {} + | sort -rh | head 2> /dev/null
+
+#FIND BIG FILES
+du -ah / --exclude={/srv/mysqldata/*,/srv/backups/*,/srv/bin-logs/*} 2>/dev/null | sort -n -r | head -n 20
+
+du -ah / --exclude={/srv/backups/*,/srv/pgdata/*,/archivedLogs/*} 2>/dev/null | sort -n -r | head -n 20
+
+ls -lSR | sort -k 5 -n | tail -5
+
+# Sort ascending, avoiding linux standards
+du -h . | sort -h | tac | grep -Ev '(bin|boot|dev|etc|init*|media|opt|proc|root|sbin|run|usr|var|sys|lib)'

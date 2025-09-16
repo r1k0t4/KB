@@ -1,0 +1,75 @@
+#bmon -o format:help
+format - Formatable Output
+
+  Formatable ASCII output for scripts. Calls a drawing function for
+  every item per node and outputs according to the specified format
+  string. The format string consists of normal text and placeholders
+  in the form of $(placeholder).
+
+  Author: Thomas Graf <tgraf@suug.ch>
+
+  Options:
+    fmt=FORMAT     Format string
+    stderr         Write to stderr instead of stdout
+    quitafter=NUM  Quit bmon after NUM outputs
+
+  Placeholders:
+    group:nelements       Number of elements this group
+         :name            Name of group
+         :title           Title of group
+    element:name          Name of element
+           :desc          Description of element
+           :nattrs        Number of attributes
+           :lifecycles    Number of lifecycles
+           :level         Indentation level
+           :parent        Name of parent element
+           :rxusage       RX usage in percent
+           :txusage       TX usage in percent)
+           :id            ID of element
+           :haschilds     Indicate if element has children (0|1)
+    attr:rx:<name>        RX counter of attribute <name>
+        :tx:<name>        TX counter of attribute <name>
+        :rxrate:<name>    RX rate of attribute <name>
+        :txrate:<name>    TX rate of attribute <name>
+
+  Supported Escape Sequences: \n, \t, \r, \v, \b, \f, \a
+
+  Examples:
+    "$(element:name)\t$(attr:rx:bytes)\t$(attr:tx:bytes)\n"
+    lo      12074   12074
+
+    "$(element:name) $(attr:rxrate:packets) $(attr:txrate:packets)\n"
+    eth0 33 5
+
+    "Element: $(element:name)\nBytes Rate: " \
+        "$(attr:rxrate:bytes)/$(attr:txrate:bytes)\nPackets Rate: " \
+        "$(attr:rxrate:packets)/$(attr:txrate:packets)\n"
+    Item: eth0
+    Bytes Rate: 49130/2119
+    Packets Rate: 40/11
+
+# bmon -o curses:help
+curses - Curses Output
+
+  Interactive curses UI. Press '?' to see help.
+  Author: Thomas Graf <tgraf@suug.ch>
+
+  Options:
+    fgchar=CHAR    Foreground character (default: '*')
+    bgchar=CHAR    Background character (default: '.')
+    nchar=CHAR     Noise character (default: ':')
+    uchar=CHAR     Unknown character (default: '?')
+    gheight=NUM    Height of graph (default: 6)
+    gwidth=NUM     Width of graph (default: 60)
+    ngraph=NUM     Number of graphs (default: 1)
+    nocolors       Do not use colors
+    graph          Show graphical stats by default
+    details        Show detailed stats by default
+    minlist=INT    Minimum item list length
+[root@db03.tickantelms.prod.mgmt.sva.antel.com.uy ~]#
+
+############################################################################
+
+bmon -o ascii:diagram=graph -p ens192
+bmon -o ascii:diagram=details -p ens192
+bmon -o format:fmt='$(element:name)\t$(attr:rx:bytes)\t$(attr:tx:bytes)\n' -p ens192

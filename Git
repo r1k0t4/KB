@@ -1,0 +1,42 @@
+URL=https://github.com/bomyst/documentacion.git
+
+#te baja todo el repo
+git pull $URL	
+git clone $URL	
+
+#te agrega todos los cambios al staging
+git add -A
+
+#Adicionar archivo concreto
+git add ${FILE}
+
+#Para saber que hiciste
+git commit -m "Comment" 
+
+#Creo una branch nueva
+git checkout -b dev
+
+#Listo las branches
+git branch
+
+#Cambio entre Branches
+git checkout main / dev
+
+#Metes los cambios en el repo
+git push origin ${BRANCH}
+
+#Update my local branch
+git pull
+
+gitdir
+git status
+git add -A
+git commit -m "UPDATE ...."
+git push origin master
+
+# https://code.mendhak.com/simple-bash-prompt-for-developers-ps1-git/
+# [cl@kh ~] echo $PS1
+# [\u@\h \[\033[32m\]\W\[\033[33m\]$(parse_git_branch)\[\033[00m\]]
+
+# SSH KeyPair setup for GitHub
+# https://gist.github.com/xirixiz/b6b0c6f4917ce17a90e00f9b60566278

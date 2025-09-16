@@ -1,0 +1,28 @@
+ 8578  docker run -d -p 10000:10000 -v /etc/hosts:/etc/hosts:rw --name=firefox-flash fmount/firefox-flash
+ 8600  #docker run -d -p 10000:10000 -v /etc/hosts:/etc/hosts:rw --name=firefox-flash fmount/firefox-flash
+ 8601  #docker run -d -p 10000:10000 -v /etc/hosts:/etc/hosts:rw --name=firefox-flash2 fmount/firefox-flash
+ 8602  docker run -d -p 10000:10000 -v /etc/hosts:/etc/hosts:rw --name=firefox-flash2 fmount/firefox-flash
+ 8604  docker run -d -p 10000:10000 -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" -v /etc/hosts:/etc/hosts fmount/firefox-flash
+ 8610  docker run -d -p 10000:10000 -v /etc/hosts:/etc/hosts:rw --name=firefox-flash fmount/firefox-flash
+ 8611  docker ps
+ 
+  
+ 616  docker run -d -v /home/CL/.mozilla/firefox/7w8ygczr.default:profile firefox-flash2
+  617  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default":profile firefox-flash2
+  620  docker start firefox-flash
+  621  docker exec -u 0 -it firefox-flash bash
+  623  docker start firefox-flash
+  624  docker exec -u 0 -it firefox-flash bash
+  625  docker exec -it firefox-flash bash
+  626  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default":".mozilla/firefox/mtpe6q3k.default/" firefox-flash2
+  627  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr\.default":".mozilla/firefox/mtpe6q3k\.default/" firefox-flash2
+  628  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":".mozilla/firefox/mtpe6q3k.default/" firefox-flash2
+  629  docker exec -it firefox-flash bash
+  630  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" firefox-flash2
+  631  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" firefox-flash
+  633  docker run -d -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" docker.io/fmount/firefox-flash
+  637  docker run -d p 10000:10000 -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" docker.io/fmount/firefox-flash 
+  638  docker run -d p 10000:10000 -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" docker.io/fmount/firefox-flash 
+  639  docker run -d p 10000:10000 -v "/home/CL/.mozilla/firefox/7w8ygczr.default/":"/home/ffox/.mozilla/firefox/mtpe6q3k.default/" docker.io/fmount/firefox-f
+
+ 8612  xpra attach tcp:localhost:10000

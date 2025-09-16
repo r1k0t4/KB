@@ -1,0 +1,24 @@
+curl
+	-s	Silent (No progress bar)
+	-L	If code=30X (redirect), follow new jump
+	-v	Verbose
+	-I	Fetch Header Only
+	-o 	Output file => /dev/null
+	-w	Defines stdout "%{PARAM}%"
+
+curl sL -w "%{http_code}" -I 192.168.20.11:8080 -o /dev/null
+
+WS=https://test.sifi.red.uy/malgci/servlet/com.gci.gc.apwsctcax01?wsdl
+CONNECTION='curl -L -k -i -X POST -H "Content-Type: application/json" --data'
+
+$CONNECTION ... $(cat $JSON) $WS
+
+#infra801
+#curl -w "%{http_code}" -v -H "Authorization: Bearer ${_TOKEN}" -X POST ${URL_WS} -H "Content-Type: application/json" -d ${_TEMP_FILE}
+
+#curl -vv -w "%{http_code}" -X POST ${URL_WS} \
+curl -L -X POST ${URL_WS} \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer ${_TOKEN}" \
+-d @${_TEMP_FILE}
+

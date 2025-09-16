@@ -1,0 +1,10 @@
+#IPERF
+#<SERVER>
+iperf   -s
+
+#<CLIENT>
+iperf   -c      #SERVER
+        -u      #UDP
+        -d      #BIDIRECTIONAL
+        -p      #PORT
+iperf.he.net    #IPERF PUBLIC SERVER

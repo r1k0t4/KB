@@ -1,0 +1,37 @@
+[root@platsuy-xds-te-prod-app03 wagy]# cd deploy/
+[root@platsuy-xds-te-prod-app03 deploy]# ll
+total 18912
+-rw-r--r--. 1 root root 19363369 mar 24 13:00 RegistroXDS.war
+
+## Conectarte al server
+[root@platsuy-xds-te-prod-app03 deploy]# /opt/wildfly/bin/jboss-cli.sh -c --controller=10.233.50.26
+
+# CONSULTAS LOCALES POR CLI
+[domain@10.233.50.26:9990 /] deployment list
+RegistroXDS.war  
+
+[domain@10.233.50.26:9990 /] 
+
+[domain@10.233.50.26:9990 /] deployment-info --name=RegistroXDS.war
+NAME            RUNTIME-NAME    
+RegistroXDS.war RegistroXDS.war 
+
+SERVER-GROUP         STATE   
+full-ha-server-group enabled 
+
+[domain@10.233.50.26:9990 /] /profile=full-ha/subsystem=datasources/data-source=DSRegistro:read-attribute(name=max-pool-size)
+{
+    "outcome" => "success",
+    "result" => 25
+}
+[domain@10.233.50.26:9990 /] 
+
+## Para sacar el war actualmente desplegado
+[domain@10.233.50.26:9990 /] attachment save --operation=/deployment=RegistroXDS.war:read-content() --file=/home/wagy/deploy/RegistroXDS-old.war
+
+## Despliegas el war nuevo con el client.cfg modificado
+[domain@10.233.50.26:9990 /] deploy /home/wagy/deploy/RegistroXDS.war --force
+
+
+
+

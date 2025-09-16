@@ -1,0 +1,87 @@
+#TCP tests / status
+
+>> Buscamos como reproducir / eliminar estos sockets:
+
+1 ) https://blog.cloudflare.com/this-is-strictly-a-violation-of-the-tcp-specification/
+[root@opp-prod-gw02 ~]# nc -4 127.0.0.1 8080 &
+[1] 1623
+[root@opp-prod-gw02 ~]# ss -n4tp '( dport = :8080 or sport = :8080 )'
+State      Recv-Q Send-Q                                  Local Address:Port                                                 Peer Address:Port             
+ESTAB      0      0                                           127.0.0.1:52576                                                   127.0.0.1:8080                users:(("nc",pid=1623,fd=3))
+
+[1]+  Stopped                 nc -4 127.0.0.1 8080
+[root@opp-prod-gw02 ~]#
+
+[root@opp-prod-gw02 ~]# ss -n4tp '( dport = :8080 or sport = :8080 )'
+State      Recv-Q Send-Q                                  Local Address:Port                                                 Peer Address:Port             
+CLOSE-WAIT 1      0                                           127.0.0.1:52576                                                   127.0.0.1:8080                users:(("nc",pid=1623,fd=3))
+[root@opp-prod-gw02 ~]#
+
+[root@opp-prod-gw02 ~]# kill -9 1623
+
+[root@opp-prod-gw02 ~]# ss -n4tp '( dport = :8080 or sport = :8080 )'
+State      Recv-Q Send-Q                                  Local Address:Port                                                 Peer Address:Port             
+[1]+  Killed                  nc -4 127.0.0.1 8080
+[root@opp-prod-gw02 ~]#
+
+2) https://stackoverflow.com/questions/15912370/how-do-i-remove-a-close-wait-socket-connection
+[root@opp-prod-gw02 ~]# ss -etn
+State      Recv-Q Send-Q                                  Local Address:Port                                                 Peer Address:Port             
+ESTAB      0      0                                      192.168.10.102:22                                                192.168.240.101:54242               timer:(keepalive,45min,0) ino:66023970 sk:ffff8c0733613e00 <->
+CLOSE-WAIT 1      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:54578               uid:1000 ino:66021868 sk:ffff8c07334b3180 -->
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36406               timer:(timewait,40sec,0) ino:0 sk:ffff8c07b546f800
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36396               timer:(timewait,31sec,0) ino:0 sk:ffff8c07b546c400
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:36894               uid:1000 ino:66029275 sk:ffff8c06827feb40 <->
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36420               timer:(timewait,53sec,0) ino:0 sk:ffff8c0734b38000
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36368               timer:(timewait,7.963ms,0) ino:0 sk:ffff8c07b546e000
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:36886               uid:1000 ino:66029250 sk:ffff8c06827fa940 <->
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36454               uid:1000 ino:66029274 sk:ffff8c06827f8000 <->
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36392               timer:(timewait,26sec,0) ino:0 sk:ffff8c07b546c200
+ESTAB      0      0                               ::ffff:192.168.10.102:9090                                       ::ffff:192.168.240.100:35828               uid:1000 ino:66029285 sk:ffff8c07334b6300 <->
+CLOSE-WAIT 1      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:55172               uid:1000 ino:66022067 sk:ffff8c06827fdac0 -->
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:36812               timer:(timewait,33sec,0) ino:0 sk:ffff8c0734b39500
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36458               uid:1000 ino:66029276 sk:ffff8c06827fa100 <->
+CLOSE-WAIT 1      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:54488               uid:1000 ino:66021754 sk:ffff8c07334b5ac0 -->
+FIN-WAIT-2 0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:36822               timer:(timewait,8.429ms,0) ino:0 sk:ffff8c0734b38d00
+CLOSE-WAIT 1      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:55356               uid:1000 ino:66022189 sk:ffff8c07334b1080 -->
+CLOSE-WAIT 1      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:55454               uid:1000 ino:66022268 sk:ffff8c07334b2100 -->
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.84:36902               uid:1000 ino:66029279 sk:ffff8c06827fca40 <->
+ESTAB      0      0                               ::ffff:192.168.10.102:8080                                         ::ffff:10.255.241.83:36462               uid:1000 ino:66029277 sk:ffff8c06827fc200 <->
+[root@opp-prod-gw02 ~]# lsof -i :8080
+COMMAND   PID   USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+java    58210 tomcat   78u  IPv6 65163377      0t0  TCP *:webcache (LISTEN)
+java    58210 tomcat   94u  IPv6 66021754      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:54488 (CLOSE_WAIT)
+java    58210 tomcat  106u  IPv6 66022268      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:55454 (CLOSE_WAIT)
+java    58210 tomcat  108u  IPv6 66022189      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.84:55356 (CLOSE_WAIT)
+java    58210 tomcat  109u  IPv6 66022067      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.84:55172 (CLOSE_WAIT)
+java    58210 tomcat  142u  IPv6 66021868      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:54578 (CLOSE_WAIT)
+java    58210 tomcat  188u  IPv6 66029281      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:36472 (ESTABLISHED)
+[root@opp-prod-gw02 ~]#
+ 
+[root@opp-prod-gw02 ~]# ss --tcp state CLOSE-WAIT --kill
+Recv-Q Send-Q                                     Local Address:Port                                                      Peer Address:Port               
+SOCK_DESTROY answers: Invalid argument
+
+[root@opp-prod-gw02 ~]# lsof -i :8080
+COMMAND   PID   USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+java    58210 tomcat   78u  IPv6 65163377      0t0  TCP *:webcache (LISTEN)
+java    58210 tomcat   94u  IPv6 66021754      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:54488 (CLOSE_WAIT)
+java    58210 tomcat  106u  IPv6 66022268      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:55454 (CLOSE_WAIT)
+java    58210 tomcat  108u  IPv6 66022189      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.84:55356 (CLOSE_WAIT)
+java    58210 tomcat  109u  IPv6 66022067      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.84:55172 (CLOSE_WAIT)
+java    58210 tomcat  110u  IPv6 66029426      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.84:36998 (ESTABLISHED)
+java    58210 tomcat  142u  IPv6 66021868      0t0  TCP prod.opp.nubegobierno.tomcat.gw02:webcache->10.255.241.83:54578 (CLOSE_WAIT)
+
+[root@opp-prod-gw02 ~]# ss --tcp state CLOSE-WAIT -K
+Recv-Q Send-Q                                     Local Address:Port                                                      Peer Address:Port               
+SOCK_DESTROY answers: Invalid argument
+[root@opp-prod-gw02 ~]#
+
+3) https://community.spiceworks.com/topic/2271706-killing-close_wait-connections-for-specific-port
+
+"This is a "feature" of UNIX that has turned out to be problematic if a process goes zombie.  And I will tell you that, in 25 years of running Solaris, I've only had to unclog the sockets twice -- and both times it was the fault of program bugs that were fixed with patches."
+
+4) https://unix.stackexchange.com/questions/539338/is-it-possible-to-force-ending-of-close-wait-connections
+
+5 ) https://www.shellhacks.com/kill-tcp-connections-close-wait-state/ [ ! KILL PID ! ]
+

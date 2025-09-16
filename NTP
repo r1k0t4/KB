@@ -1,0 +1,16 @@
+https://blog.selectel.com/synchronizing-servers-ntp/
+https://www.thegeekdiary.com/centos-rhel-7-configuring-ntp-using-chrony/
+https://opensource.com/article/18/12/manage-ntp-chrony
+
+ntpdc -c sysinfo
+
+ntpdate -q 172.19.10.51
+
+ntpq -pn
+
+chronyc sources
+chronyc sourcestats
+chronyc tracking
+
+# SLOW SYNC 
+ntp viene con -g y -x lo cambia al SLOW SYNC

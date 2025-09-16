@@ -1,0 +1,16 @@
+#BUSCO PID
+pgrep rsyslog
+
+#LSOF
+#BUSCO PROCESOS POR PID
+lsof -p $(pgrep syslogd)
+
+#FILTRO /var/log POR PROCESOS DE PID
+lsof -p $(pgrep syslogd) | grep '/var/log'
+
+
+#FUSER
+fuser -avm .
+systemctl list-units | grep -e audit -e vmtool -e tuned -e rsyslog -e zabbix
+
+fuser -v 3306/tcp
